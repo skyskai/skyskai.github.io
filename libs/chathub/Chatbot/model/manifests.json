@@ -1,0 +1,183 @@
+{
+	"donut": {
+		"sap.card": {
+			"type": "Analytical",
+			"header": {
+				"title": "조직별 자산 현황"
+			},
+			"content": {
+				"chartType": "Donut",
+				"legend": {
+					"visible": true,
+					"position": "Bottom",
+					"alignment": "Left"
+				},
+				"plotArea": {
+					"dataLabel": {
+						"visible": true,
+						"showTotal": true
+					}
+				},
+				"title": {
+					"visible": false
+				},
+				"measureAxis": "size",
+				"dimensionAxis": "color",
+				"data": {
+					"json": {
+						"measures": [{
+							"measureName": "ERP사업팀",
+							"value": 350
+						}, {
+							"measureName": "Next ERP팀",
+							"value": 210
+						}, {
+							"measureName": "G-ERP팀",
+							"value": 120
+						}, {
+							"measureName": "S-ERP팀",
+							"value": 40
+						}]
+					},
+					"path": "/measures"
+				},
+				"dimensions": [{
+					"label": "Measure Name",
+					"value": "{measureName}"
+				}],
+				"measures": [{
+					"label": "Value",
+					"value": "{value}"
+				}]
+			}
+		}
+	},
+	"starAssetFromGitHub": {
+		"sap.app": {
+			"type": "card",
+			"i18n": "i18n/i18n.properties"
+		},
+		"sap.card": {
+			"configuration": {
+				"parameters": {
+					"searchTerm": {
+						"value": "ABAP"
+					},
+					"token": {
+						"value": "d09c2697c08481119d5f30a658cfe3443b58bb83"
+					}
+				}
+			},
+			"data": {
+				"request": {
+					"url": "https://api.github.com/search/repositories?q=language:{{parameters.searchTerm}}&page=1&per_page=5&sort=stars&order=desc&access_token={{parameters.token}}",
+					"method": "GET"
+				}
+			},
+			"type": "List",
+			"header": {
+				"title": "인기 자산(github.com) ({{parameters.searchTerm}})",
+				"status": {
+					"text": {
+						"format": {
+							"translationKey": "i18n>card.count",
+							"parts": [
+								"parameters>/visibleItems",
+								"/total_count"
+							]
+						}
+					}
+				}
+			},
+			"content": {
+				"data": {
+					"path": "/items"
+				},
+				"item": {
+					"icon": {
+						"src": "{owner/avatar_url}"
+					},
+					"title": {
+						"value": "{name}"
+					},
+					"description": {
+						"value": "{full_name}"
+					},
+					"info": {
+						"value": "{stargazers_count}"
+					},
+					"actions": [{
+						"type": "Navigation",
+						"enabled": "{= ${html_url}}",
+						"url": "{html_url}"
+
+					}]
+				}
+			}
+		}
+	},
+	"starAssetFromLocalGitHub": {
+		"sap.app": {
+			"type": "card",
+			"i18n": "i18n/i18n.properties"
+		},
+		"sap.card": {
+			"configuration": {
+				"parameters": {
+					"searchTerm": {
+						"value": "ABAP"
+					},
+					"token": {
+						"value": "9da831d797ba01da557a414ca373538c1bf4a286"
+					}
+				}
+			},
+			"data": {
+				"request": {
+					"url": "https://code.sdsdev.co.kr/api/v3/search/repositories?q=language:{{parameters.searchTerm}}&page=1&per_page=5&sort=stars&order=desc&access_token={{parameters.token}}",
+					"method": "GET"
+				}
+			},
+			"type": "List",
+			"header": {
+				"title": "인기 자산(SDS) ({{parameters.searchTerm}})",
+				"status": {
+					"text": {
+						"format": {
+							"translationKey": "i18n>card.count",
+							"parts": [
+								"parameters>/visibleItems",
+								"/total_count"
+							]
+						}
+					}
+				}
+			},
+
+			"content": {
+				"data": {
+					"path": "/items"
+				},
+				"item": {
+					"icon": {
+						"src": "{owner/avatar_url}"
+					},
+					"title": {
+						"value": "{name}"
+					},
+					"description": {
+						"value": "{full_name}"
+					},
+					"info": {
+						"value": "{stargazers_count}"
+					},
+					"actions": [{
+						"type": "Navigation",
+						"enabled": "{= ${html_url}}",
+						"url": "{html_url}"
+					}]
+				}
+			}
+		}
+	}
+}
