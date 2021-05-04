@@ -1,0 +1,87 @@
+{
+	"currentSID": "",
+	"bExpadLeftPane": false,
+	"Chatbot": {
+		"bFullSize": false,
+		"initWidth": "500px",
+		"initHeight": "900px",
+		"maxWidth": "100%",
+		"maxHeight": "100%",
+		"isOpen": false,
+		"notificationMsg": {
+			"text": "",
+			"type": ""
+		},
+		"icon": "com/sds/newflp/css/imgs/boticon6-1.gif",
+		"notificationCloseTime": "10000",
+		"showNotificationMsg": true
+
+	},
+	"ExternalLinks": [{
+		"src": "sap-icon://home",
+		"title": "Home",
+		"subTitle": "Central Home",
+		"target": "_self",
+		"targetSrc": "#New-home"
+
+	}, {
+		"src": "sap-icon://customer",
+		"title": "Ariba Extension(QAS)",
+		"subTitle": "Ariba",
+		"target": "_blank",
+		"targetSrc": "https://flpnwc-jd4lisfm68.dispatcher.jp1.hana.ondemand.com/sites#Home-Display"
+	}, {
+		"src": "sap-icon://product",
+		"title": "ERP Asset Portal",
+		"subTitle": "Assets",
+		"target": "_blank",
+		"targetSrc": "https://flpnwc-g51d19f20.dispatcher.jp1.hana.ondemand.com/sites?siteId=ab688593-b475-45b2-8eed-af97dee5c3a4&sap-ushell-config=standalone#YSCGITPORTAL-Display"
+	}, {
+		"src": "sap-icon://post",
+		"title": "Chatbot",
+		"subTitle": "Custom chatbot",
+		"target": "_blank",
+		"targetSrc": "https://customchatbot-g51d19f20.dispatcher.jp1.hana.ondemand.com/index.html?hc_reset"
+	}, {
+		"src": "sap-icon://batch-payments",
+		"title": "S/4HANA Cloud",
+		"target": "_blank",
+		"targetSrc": "https://my301953.s4hana.ondemand.com/ui?saml2=disabled#Shell-home"
+	}, {
+		"src": "sap-icon://business-objects-experience",
+		"title": "Analytics Cloud",
+		"subTitle": "Analytics Cloud"
+	}, {
+		"src": "sap-icon://contacts",
+		"title": "Catalog",
+		"subTitle": "Ariba",
+		"target": "_blank",
+		"targetSrc": "https://buyer.ariba.com"
+	}, {
+		"src": "sap-icon://credit-card",
+		"title": "Guided Buying"
+	}, {
+		"src": "sap-icon://cart-3",
+		"title": "Strategic Procurement"
+	}, {
+		"src": "sap-icon://flight",
+		"title": "Travel & Expense",
+		"subTitle": "Concur"
+	}, {
+		"src": "sap-icon://shipping-status",
+		"title": "Vendor Management",
+		"subTitle": "Fieldglass"
+	}, {
+		"src": "sap-icon://sales-notification",
+		"title": "Sales Cloud",
+		"subTitle": "Sales Cloud"
+	}, {
+		"src": "sap-icon://retail-store",
+		"title": "Commerce Cloud",
+		"subTitle": "Commerce cloud"
+	}, {
+		"src": "sap-icon://marketing-campaign",
+		"title": "Marketing Cloud",
+		"subTitle": "Marketing Cloud"
+	}]
+}
