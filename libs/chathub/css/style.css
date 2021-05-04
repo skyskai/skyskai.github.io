@@ -1,0 +1,76 @@
+/*floating container visible */
+/*floating chatbot*/
+.chatHubThemeBG {
+    background-image: linear-gradient(-155deg, rgba(74, 148, 214, .4) 45%, rgba(255, 255, 255, .08) 15%), linear-gradient(258deg, rgba(87, 238, 255, .1), rgba(77, 108, 211, .2)) !important;
+    background-color: #354a5f !important;
+}
+
+/*텍스트 컬러*/
+.chatHubThemeBG * {
+    color: white !important;
+}
+
+.home-floating-Chatbot {
+    position: absolute !important;
+    bottom: 0%;
+    right: -500px;
+    /*margin-right: -500px;*/
+    width: 500px;
+    height: 100% !important;
+    z-index: 3;
+    display: block;
+}
+
+.home-floating-Chatbot.show {
+    right: 0px;
+    /*margin-right: 0px;*/
+    position: relative;
+    animation: animateright 0.4s
+}
+
+@keyframes animateright {
+    from {
+        right: -500px;
+        opacity: 0
+    }
+
+    to {
+        right: 0;
+        opacity: 1
+    }
+}
+
+
+@media only screen and (max-width: 600px) {
+    .home-floating-Chatbot {
+        width: 100%
+    }
+
+}
+
+
+#idHomeFloatingButton {
+    position: absolute !important;
+    bottom: 5% !important;
+    right: 5% !important;
+    /*width: 64px !important;*/
+    height: 64px !important;
+    z-index: 2;
+}
+
+#idHomeFloatingButton .home-mover {
+    visibility: hidden;
+}
+
+#idHomeFloatingButton:hover .home-mover {
+    visibility: visible;
+}
+
+.yscFABOpen {
+    right: 100px;
+}
+
+.sapUshellFloatingContainer {
+    box-shadow: none !important;
+    width: 64px !important;
+}
