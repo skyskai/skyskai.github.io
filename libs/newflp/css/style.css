@@ -1,0 +1,287 @@
+.sapUshellShellIco::before {
+    content: url('imgs/charles5.png');
+    vertical-align: middle !important;
+    padding-top: 0.56rem;
+}
+
+#shell-header-icon {
+    display: none !important;
+}
+
+
+/*.sapUshellShellHeadEnd>.sapUshellShellIco>img,*/
+
+
+/*.sapUshellShellHeadBegin>.sapUshellShellIco>img {*/
+
+
+/*    display: none;*/
+
+
+/*}*/
+
+
+/*#shell-header-logo::after {*/
+
+
+/*    content: url('imgs/logo.png');*/
+
+
+/*}*/
+
+
+/*사이드 메뉴 우측 검은 선 제거*/
+
+.sapUshellSpltContH .sapUshellSpltContPane {
+    border-right: none;
+}
+
+
+/*footer*/
+
+.sapMPageFooterL>.sapMIBar {
+    background: transparent !important;
+    border-top: none;
+}
+
+
+/*floating container visible */
+/*floating chatbot*/
+.chatHubThemeBG {
+    background-image: linear-gradient(-155deg, rgba(74, 148, 214, .4) 45%, rgba(255, 255, 255, .08) 15%), linear-gradient(258deg, rgba(87, 238, 255, .1), rgba(77, 108, 211, .2)) !important;
+    background-color: #354a5f !important;
+}
+
+/*텍스트 컬러*/
+.chatHubThemeBG * {
+    color: white !important;
+}
+
+.home-floating-Chatbot {
+    position: absolute !important;
+    bottom: 0%;
+    right: -500px;
+    /*margin-right: -500px;*/
+    width: 500px;
+    height: 100% !important;
+    z-index: 3;
+    display: block;
+}
+
+.home-floating-Chatbot.show {
+    right: 0px;
+    /*margin-right: 0px;*/
+    position: relative;
+    animation: animateright 0.4s
+}
+
+@keyframes animateright {
+    from {
+        right: -500px;
+        opacity: 0
+    }
+
+    to {
+        right: 0;
+        opacity: 1
+    }
+}
+
+
+@media only screen and (max-width: 600px) {
+    .home-floating-Chatbot {
+        width: 100%
+    }
+
+}
+
+
+#idHomeFloatingButton {
+    position: absolute !important;
+    bottom: 5% !important;
+    right: 5% !important;
+    /*width: 64px !important;*/
+    height: 64px !important;
+    z-index: 2;
+}
+
+#idHomeFloatingButton .home-mover {
+    visibility: hidden;
+}
+
+#idHomeFloatingButton:hover .home-mover {
+    visibility: visible;
+}
+
+.yscFABOpen {
+    right: 100px;
+}
+
+.sapUshellFloatingContainer {
+    box-shadow: none !important;
+    width: 64px !important;
+}
+
+#idHomeAndWorkplaceDialog {
+    /*top:calc(50% + 0px) !important;*/
+    /*left:calc(50% + 0px) !important;*/
+    max-height: 100% !important;
+    max-width: 100% !important;
+}
+
+
+/*#idHomeAndWorkplaceApp{*/
+
+
+/*    height:900px;*/
+
+
+/*}*/
+
+.home-header {
+    position: fixed !important;
+    top: 15px;
+    z-index: 1;
+    border-bottom: none;
+}
+
+.home-header .sapMSegBBtnInner {
+    border-color: gray;
+}
+
+
+/*타이틀*/
+
+.home-header .sapMTitle {
+    color: white;
+    text-shadow: 0 0 0.125rem #000;
+    /*text-shadow: 0 0 0.125rem white;*/
+}
+
+
+/*테두리 */
+
+.home-header .sapMSegBBtnInner {
+    border-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+
+/*선택된 버튼 색상 투명 검정*/
+
+.home-header .sapMSegBBtnSel .sapMSegBBtnInner {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+
+/*Home/Workplace Segmented Button 선택되지 않은 버튼*/
+
+.home-header .sapMSegBBtnSel .sapMSegBBtnInner {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+
+/*Home/Workplace Segmented Button 선택 되지 않은 버튼*/
+
+
+/*.home-header .sapMSegBBtnSel .sapMSegBBtnInner{*/
+
+
+/*    background:none;*/
+
+
+/*    color:black;*/
+
+
+/*    text-shadow: 0 0 0.125rem #000;*/
+
+
+/*}*/
+
+
+/*Home/Workplace Segmented Button 선택 된 버튼*/
+
+
+/*.home-header .sapMSegBBtnSel .sapMSegBBtnInner{*/
+
+
+/*    background:none;*/
+
+
+/*    color:white;*/
+
+
+/*    text-shadow: 0 0 0.125rem #000;*/
+
+
+/*}*/
+
+
+/*Segmented Button공통(선택/미선택)*/
+
+.home-header .sapMSegBBtn .sapMSegBBtnInner {
+    background: none;
+    color: black;
+}
+
+
+/*Segmented Button 선택 */
+
+.home-header .sapMSegBBtn.sapMSegBBtnSel .sapMSegBBtnInner {
+    color: white;
+}
+
+.home-header .sapUiIcon {
+    color: white;
+    text-shadow: 0 0 0.125rem #000;
+}
+
+.home-header .sapMLabelTextWrapper {
+    color: white;
+    text-shadow: 0 0 0.125rem #000;
+}
+
+.home-header .sapMBtnContent {
+    color: white;
+    text-shadow: 0 0 0.125rem #000;
+}
+
+.home-header .sapMLabel {
+    color: white;
+    text-shadow: 0 0 0.125rem #000;
+}
+
+
+/*임시 신규 테마에서 라인 어긋나는 부분*/
+
+
+/*.sapMPopover .sapMLabel{*/
+
+
+/*    line-height:2rem !important;*/
+
+
+/*}*/
+
+
+/*Dialog Home*/
+
+
+/*#idHomeAndWorkplacePopover{*/
+
+
+/*    top:0 !important;*/
+
+
+/*}*/
+
+
+/*#sap-ui-blocklayer-popup{*/
+
+
+/*    z-index:0 !important;*/
+
+
+/*    display:none !important;*/
+
+
+/*}*/
