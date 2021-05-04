@@ -1,0 +1,394 @@
+ {
+
+ 	"MegaMenuProcess": [{
+ 		"key": "5",
+ 		"title": "My Home",
+ 		"type": "Group",
+ 		"value": ["default-group-id", "sample_group"]
+ 	}, {
+ 		"key": "home",
+ 		"title": "Home",
+ 		"type": "Intent",
+ 		"value": "#New-home"
+ 	}, {
+ 		"key": "10",
+ 		"title": "Marketing",
+ 		"type": "Menu",
+ 		"items": [{
+ 			"title": "Sales Deduction",
+ 			"type": "Menu",
+ 			"items": [{
+ 				"title": "Yearly Planning",
+ 				"type": "Menu",
+ 				"items": [{
+ 					"title": "Yearly Plan Preparat...",
+ 					"type": "Intent",
+ 					"value": ""
+ 				}, {
+ 					"title": "Yearly Plan Establis...",
+ 					"type": "Intent",
+ 					"value": ""
+ 				}]
+ 			}, {
+ 				"title": "Forecast & Target Planning",
+ 				"type": "Url",
+ 				"value": "https://www.google.com"
+ 			}]
+ 		}]
+ 	}, {
+ 		"key": "20",
+ 		"title": "Sales Distribution",
+ 		"type": "Menu",
+ 		"items": [{
+ 			"title": "Customers",
+ 			"type": "Menu",
+ 			"items": [{
+ 				"title": "Master Data Mgmt",
+ 				"type": "Menu",
+ 				"items": [{
+ 					"title": "Customer Management",
+ 					"type": "Url",
+ 					"value": "https://www.google.com"
+ 				}, {
+ 					"title": "Sales Model Management",
+ 					"type": "Url",
+ 					"value": "https://www.google.com"
+ 				}, {
+ 					"title": "Sales Organization Mgm...",
+ 					"type": "Url",
+ 					"value": "https://www.google.com"
+ 				}]
+ 			}, {
+ 				"title": "Pre-Sales Opportunity Mg...",
+ 				"type": "Menu",
+ 				"items": [{
+ 					"title": "Sample Management",
+ 					"type": "Url",
+ 					"value": "https://www.google.com"
+ 				}, {
+ 					"title": "Demand Forecast Mgmt",
+ 					"type": "Url",
+ 					"value": "https://www.google.com"
+ 				}]
+ 			}, {
+ 				"title": "Order Mgmt",
+ 				"type": "Menu",
+ 				"items": [{
+ 					"title": "Sales Price Mgmt",
+ 					"type": "Url",
+ 					"value": "https://www.google.com"
+ 				}, {
+ 					"title": "Normal order",
+ 					"type": "Url",
+ 					"value": "https://www.google.com"
+ 				}, {
+ 					"title": "Special order",
+ 					"type": "Url",
+ 					"value": "https://www.google.com"
+ 				}, {
+ 					"title": "Contents Service Order",
+ 					"type": "Url",
+ 					"value": "https://www.google.com"
+ 				}, {
+ 					"title": "Consigment Order",
+ 					"type": "Url",
+ 					"value": "https://www.google.com"
+ 				}, {
+ 					"title": "Return Order",
+ 					"type": "Menu",
+ 					"items": [{}]
+ 				}, {
+ 					"title": "Employee Sales",
+ 					"type": "Url",
+ 					"value": "https://www.google.com"
+ 				}, {
+ 					"title": "Other Order",
+ 					"type": "Url",
+ 					"value": "https://www.google.com"
+ 				}, {
+ 					"title": "Order Promising",
+ 					"type": "Url",
+ 					"value": "https://www.google.com"
+ 				}, {
+ 					"title": "Order Processing Mgmt",
+ 					"type": "Url",
+ 					"value": "https://www.google.com"
+ 				}]
+ 			}, {
+ 				"title": "Sales Management",
+ 				"type": "Url",
+ 				"value": "https://www.google.com"
+ 			}, {
+ 				"title": " Inter-Subsidiary Transac...",
+ 				"type": "Url",
+ 				"value": "https://www.google.com"
+ 			}]
+
+ 		}, {
+ 			"title": "Enterprise",
+ 			"type": "Intent",
+ 			"value": "dummy"
+
+ 		}, {
+ 			"title": "Retail",
+ 			"type": "Menu",
+ 			"items": [{
+ 				"title": "Internal Direct Manageme...",
+ 				"type": "Intent",
+ 				"value": "dummy"
+ 			}, {
+ 				"title": "Overseas Direct Manageme...",
+ 				"type": "Intent",
+ 				"value": "dummy"
+ 			}]
+ 		}, {
+ 			"title": "Online Sales",
+ 			"type": "Menu",
+ 			"items": [{
+ 				"title": " e-store",
+ 				"type": "Intent",
+ 				"value": "dummy"
+ 			}, {
+ 				"title": "Pure Player",
+ 				"type": "Intent",
+ 				"value": "dummy"
+ 			}]
+
+ 		}]
+ 	}, {
+ 		"key": "30",
+ 		"title": "Service",
+ 		"type": "Menu",
+ 		"items": [{
+ 			"title": "Service Material Operation",
+ 			"type": "Intent",
+ 			"value": "dummy"
+ 		}, {
+ 			"title": "Service Center Management",
+ 			"type": "Intent",
+ 			"value": "dummy"
+ 		}, {
+ 			"title": "Service Material Operation...",
+ 			"type": "Intent",
+ 			"value": "dummy"
+ 		}]
+ 	}, {
+ 		"key": "40",
+ 		"title": "Procurement",
+ 		"type": "Menu",
+ 		"items": [{
+ 			"title": "Team Calendar",
+ 			"type": "Intent",
+ 			"value": "#demoteamcalendar-Display"
+ 		}, {
+ 			"title": "Purchase of goods",
+ 			"type": "Intent",
+ 			"value": "dummy"
+ 		}, {
+ 			"title": "Equipment Purchasing",
+ 			"type": "Intent",
+ 			"value": "dummy"
+ 		}, {
+ 			"title": "Material Management",
+ 			"type": "Intent",
+ 			"value": "dummy"
+ 		}, {
+ 			"title": "Customs clearance",
+ 			"type": "Intent",
+ 			"value": "dummy"
+ 		}]
+ 	}, {
+ 		"key": "50",
+ 		"title": "Production",
+ 		"type": "Menu",
+ 		"items": [{
+ 			"title": "Manage Products",
+ 			"type": "Intent",
+ 			"value": "#demoList-Display"
+ 		}, {
+ 			"title": "Short Term Production Plan...",
+ 			"type": "Intent",
+ 			"value": "dummy"
+ 		}, {
+ 			"title": "Production execution",
+ 			"type": "Intent",
+ 			"value": "dummy"
+ 		}, {
+ 			"title": "Quality Control",
+ 			"type": "Intent",
+ 			"value": "dummy"
+ 		}, {
+ 			"title": "Material Requirement Manag...",
+ 			"type": "Intent",
+ 			"value": "dummy"
+ 		}, {
+ 			"title": "External Processing",
+ 			"type": "Intent",
+ 			"value": "dummy"
+ 		}, {
+ 			"title": "Contract Manufacturing",
+ 			"type": "Intent",
+ 			"value": "dummy"
+ 		}, {
+ 			"title": "Component Supply",
+ 			"type": "Intent",
+ 			"value": "dummy"
+ 		}]
+ 	}, {
+ 		"key": "60",
+ 		"title": "Logistics",
+ 		"type": "Group",
+ 		"value": ["7331c998-7afb-451e-8ec0-3ba79bef307e-1598877485699", "cf552b82-b166-4022-bb3b-744c8cfdc3f5-1598877494060",
+ 			"bc2d71e6-1f05-405c-969e-e1c28e5e408f-1598877515068"
+ 		]
+ 	}, {
+ 		"key": "70",
+ 		"title": "Finance",
+ 		"type": "Group",
+ 		"value": ["ce68ecf3-64f4-436a-b8d6-884f6c5a4b29-1598860607176", "ed1833b1-4b34-4fe5-8259-c5953335118b-1598877462205",
+ 			"152439ae-f180-4813-bd5a-0129fe1ab644-1598877476918"
+ 		]
+ 	}, {
+ 		"key": "80",
+ 		"title": "Controlling",
+ 		"type": "Intent",
+ 		"value": "dummy"
+ 	}, {
+ 		"key": "90",
+ 		"title": "Master Data",
+ 		"type": "Intent",
+ 		"value": "dummy"
+ 	}, {
+ 		"key": "100",
+ 		"title": "External Links",
+ 		"type": "Menu",
+ 		"items": [{
+ 			"title": "SCP Japan Cockpit",
+ 			"type": "Url",
+ 			"value": "https://account.jp1.hana.ondemand.com/cockpit#/globalaccount/CA160755TID000000000740590668/neosubaccount/793c3cd5-cab9-430a-844a-014d3649ff05/accountdashboard"
+ 		}, {
+ 			"title": "SAP Web IDE",
+ 			"type": "Url",
+ 			"value": "https://webidecp-g51d19f20.dispatcher.jp1.hana.ondemand.com/?workspaceId=workspaceaaqsbnausyx20i8s"
+ 		}, {
+ 			"title": "SCP Portal Admin",
+ 			"type": "Url",
+ 			"value": "https://flpnwc-g51d19f20.dispatcher.jp1.hana.ondemand.com/sites/adminspace"
+ 		}]
+ 	}],
+ 	"MegaMenuSD": [{
+ 		"title": "Home",
+ 		"type": "Intent",
+ 		"value": "#Shell-home"
+ 	}, {
+ 		"title": "B2C",
+ 		"type": "Menu",
+ 		"items": [{
+ 			"title": "Master Data Mgmt",
+ 			"type": "Menu",
+ 			"items": [{
+ 				"title": "Naver.com",
+ 				"type": "Url",
+ 				"value": "https://www.naver.com"
+ 			}, {
+ 				"title": "Sales Model Management"
+ 			}, {
+ 				"title": "Sales Organization Mgm"
+ 			}]
+ 		}, {
+ 			"title": "Pre-Sales Opportunity Mg...",
+ 			"items": [{
+ 				"title": "Sample Management"
+ 			}, {
+ 				"title": "Demand Forecast Mgmt"
+ 			}, {
+ 				"title": "Sales Organization Mgm"
+ 			}]
+ 		}, {
+ 			"title": "n개 그룹(Group)",
+ 			"type": "Group",
+ 			"value": ["sample_group", "YTG_UXZ100"]
+ 		}]
+ 	}, {
+ 		"title": "B2B",
+ 		"type": "Menu",
+ 		"items": [{
+ 			"title": "Master Data Mgmt",
+ 			"items": [{
+ 				"title": "Customer Management"
+ 			}, {
+ 				"title": "Sales Model Management"
+ 			}, {
+ 				"title": "Sales Organization Mgm"
+ 			}]
+ 		}, {
+ 			"title": "Pre-Sales Opportunity Mg...",
+ 			"items": [{
+ 				"title": "Sample Management"
+ 			}, {
+ 				"title": "Demand Forecast Mgmt"
+ 			}, {
+ 				"title": "Sales Organization Mgm"
+ 			}]
+ 		}]
+ 	}, {
+ 		"title": "Retail",
+ 		"items": [{
+ 			"title": " Internal Direct Manageme...",
+ 			"items": [{
+ 				"title": "Pre-Sales Management i..."
+ 			}, {
+ 				"title": "Sales Order Management..."
+ 			}, {
+ 				"title": "Follow-up Management i..."
+ 			}]
+ 		}, {
+ 			"title": "Overseas Direct Manageme...",
+ 			"items": [{
+ 				"title": "Pre-Sales Management i..."
+ 			}, {
+ 				"title": "Sales Order Management..."
+ 			}, {
+ 				"title": "Follow-up Management i..."
+ 			}, {
+ 				"title": "Sales Price Management"
+ 			}]
+ 		}]
+ 	}, {
+ 		"title": "Online Sales",
+ 		"items": [{
+ 			"title": "e-store",
+ 			"items": [{
+ 				"title": "Product Management"
+ 			}, {
+ 				"title": "Category Management"
+ 			}, {
+ 				"title": "Availabiility Manageme..."
+ 			}, {
+ 				"title": "Order Management"
+ 			}, {
+ 				"title": "Customer service Manag..."
+ 			}]
+ 		}, {
+ 			"title": "Pure Player",
+ 			"items": [{
+ 				"title": "Product Management"
+ 			}, {
+ 				"title": "Category Management"
+ 			}, {
+ 				"title": "Availabiility Manageme..."
+ 			}, {
+ 				"title": "Order Management",
+ 				"items": [{
+ 					"title": "[SD] 선행개발",
+ 					"icon": "sap-icon://chain-link",
+ 					"key": "ZTG_SDA_TEMP"
+ 				}, {
+ 					"title": "[UX] Utility",
+ 					"icon": "sap-icon://chain-link",
+ 					"key": "YTG_UXZ100"
+ 				}]
+ 			}]
+ 		}]
+ 	}]
+ }
