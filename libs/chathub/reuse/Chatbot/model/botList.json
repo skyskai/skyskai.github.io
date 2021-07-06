@@ -8,12 +8,20 @@
 		"serverURL": "https://nfndap01.sec.samsung.net/sap/charles/simplechat/general?query="
 	}, {
 		"botId": "20",
-		"type": "Mockup",
+		"type": "",
 		"icon": "sap-icon://sap-ui5",
 		"title": "ABAP Chatbot",
 		"description": "Call ABAP Chatbot engine",
+		"token": "Basic",
+		"serverURL": "https://erplnx01.samsung.com:4320/charles/chathub/sample?query="
+	}, {
+		"botId": "25",
+		"type": "Mockup",
+		"icon": "sap-icon://sap-ui5",
+		"title": "ABAP Chatbot(sample)",
+		"description": "Call ABAP Chatbot engine",
 		"token": "Bearer a26c7c45ff4b41109fe17cb0d6628954",
-		"serverURL": "https://api.dialogflow.com/v1/query?v=20150910&lang=en&sessionId={sessionId}&query="
+		"serverURL": "http://erplnx01.samsung.com:8020/charles/chathub/sample?query="
 	}, {
 		"botId": "30",
 		"type": "Mockup",
