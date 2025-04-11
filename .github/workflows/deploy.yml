@@ -1,9 +1,65 @@
+# VitePress 사이트를 GitHub Pages에 빌드하고 배포하는 샘플 워크플로우
+#
+name: VitePress 사이트를 Pages에 배포
+
+on:
+  # `main` 브랜치를 대상으로 하는 푸시에서 실행됩니다. 기본 브랜치로 `master`를 사용하는 경우 여기를 `master`로 변경하세요.
+  push:
+    branches: [main]
+
+  # Actions 탭에서 이 워크플로우를 수동으로 실행할 수 있게 합니다.
+  workflow_dispatch:
+
+# GitHub Pages에 배포할 수 있도록 GITHUB_TOKEN의 권한을 설정합니다.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 진행 중인 실행과 마지막으로 대기 중인 실행 사이에 대기 중인 실행을 건너뛰어 하나의 동시 배포만 허용합니다.
+# 그러나 이러한 프로덕션 배포가 완료되도록 진행 중인 실행은 취소하지 않습니다.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 jobs:
   # 빌드 작업
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # lastUpdated가 활성화되지 않은 경우 필요하지 않음
+      # - uses: pnpm/action-setup@v3 # pnpm을 사용하는 경우 주석 해제
+      #   with:
+      #     version: 9
+      # - uses: oven-sh/setup-bun@v1 # Bun을 사용하는 경우 주석 해제
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm # 또는 pnpm / yarn
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+      - name: Install dependencies
+        run: npm ci # 또는 pnpm install / yarn install / bun install
+      - name: Build with VitePress
+        run: npm run docs:build # 또는 pnpm docs:build / yarn docs:build / bun run docs:build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: docs/.vitepress/dist
+
+  # 배포 작업
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
