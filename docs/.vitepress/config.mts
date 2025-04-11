@@ -3,6 +3,7 @@ import { defineConfig } from 'vitepress'
 // https://vitepress.dev/reference/site-config
 export default {
   title: 'ABAP ADT API 문서',
+  base: '/docs/',
   description: 'ABAP ADT API를 위한 개발자 가이드',
   themeConfig: {
     siteTitle: 'ABAP ADT API',
