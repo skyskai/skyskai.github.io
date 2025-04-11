@@ -1,55 +1,55 @@
-# 시작하기
+# Getting Started
 
-ABAP ADT API 라이브러리를 사용하여 SAP ABAP 시스템과 상호작용하는 애플리케이션을 개발하는 방법을 알아보겠습니다.
+Let's learn how to develop applications that interact with SAP ABAP systems using the ABAP ADT API library.
 
-## 설치
+## Installation
 
-npm을 사용하여 라이브러리를 설치할 수 있습니다.
+You can install the library using npm:
 
 ```bash
 npm install abap-adt-api
 ```
 
-또는 yarn을 사용할 경우:
+Or if you're using yarn:
 
 ```bash
 yarn add abap-adt-api
 ```
 
-## 기본 설정
+## Basic Configuration
 
-ABAP ADT API를 사용하기 위해서는 다음과 같은 기본 설정이 필요합니다.
+The following basic setup is required to use the ABAP ADT API.
 
-### ADTClient 초기화
+### Initializing ADTClient
 
 ```typescript
 import { ADTClient } from 'abap-adt-api';
 
-// 기본 클라이언트 생성
+// Create basic client
 const client = new ADTClient(
-  'https://your-sap-server.com', // SAP 서버 URL
-  'username',                    // 사용자 이름
-  'password',                    // 비밀번호
-  '001',                         // 클라이언트 (선택적)
-  'EN'                           // 언어 (선택적)
+  'https://your-sap-server.com', // SAP server URL
+  'username',                    // Username
+  'password',                    // Password
+  '001',                         // Client (optional)
+  'EN'                           // Language (optional)
 );
 ```
 
-### SSL 인증서 설정
+### SSL Certificate Configuration
 
-자체 서명된 인증서나 사설 인증 기관을 사용하는 경우, SSL 설정을 추가해야 할 수 있습니다.
+If you're using self-signed certificates or private certificate authorities, you may need to add SSL settings.
 
 ```typescript
 import { ADTClient, createSSLConfig } from 'abap-adt-api';
 import fs from 'fs';
 
-// SSL 설정
+// SSL configuration
 const sslConfig = createSSLConfig(
-  true,                           // 인증서 검증 우회 (개발용)
-  fs.readFileSync('ca.pem', 'utf8') // CA 인증서 (선택적)
+  true,                           // Bypass certificate verification (for development)
+  fs.readFileSync('ca.pem', 'utf8') // CA certificate (optional)
 );
 
-// SSL 설정을 포함한 클라이언트 생성
+// Create client with SSL configuration
 const client = new ADTClient(
   'https://your-sap-server.com',
   'username',
@@ -60,52 +60,52 @@ const client = new ADTClient(
 );
 ```
 
-## 로그인 및 세션 관리
+## Login and Session Management
 
-ADT API를 사용하기 위해서는 먼저 SAP 시스템에 로그인해야 합니다.
+You need to log in to the SAP system first to use the ADT API.
 
 ```typescript
 async function main() {
   try {
-    // 로그인
+    // Login
     await client.login();
-    console.log('로그인 성공');
+    console.log('Login successful');
     
-    // 세션 상태 확인
-    console.log(`로그인 상태: ${client.loggedin}`);
-    console.log(`세션 ID: ${client.sessionID}`);
+    // Check session status
+    console.log(`Login status: ${client.loggedin}`);
+    console.log(`Session ID: ${client.sessionID}`);
     
-    // 작업 수행...
+    // Perform tasks...
     
-    // 로그아웃
+    // Logout
     await client.logout();
-    console.log('로그아웃 성공');
+    console.log('Logout successful');
   } catch (error) {
-    console.error('오류 발생:', error);
+    console.error('Error occurred:', error);
   }
 }
 
 main();
 ```
 
-### 세션 유형
+### Session Types
 
-ABAP ADT API는 다음과 같은 세션 유형을 지원합니다:
+ABAP ADT API supports the following session types:
 
-- **Stateless**: 각 요청이 독립적으로 처리됩니다. (기본값)
-- **Stateful**: 서버에서 상태를 유지합니다. 오브젝트 잠금 등의 기능에 필요합니다.
+- **Stateless**: Each request is processed independently. (default)
+- **Stateful**: The server maintains state. Required for features like object locking.
 
 ```typescript
-// 상태 유지 세션으로 설정
+// Set to stateful session
 client.stateful = "stateful";
 
-// 상태 확인
-console.log(`상태 유지 세션: ${client.isStateful}`);
+// Check status
+console.log(`Stateful session: ${client.isStateful}`);
 ```
 
-## 기본 작업 흐름 예제
+## Basic Workflow Example
 
-다음은 ABAP 프로그램의 소스 코드를 조회하고 수정하는 기본적인 작업 흐름입니다.
+The following is a basic workflow for retrieving and modifying the source code of an ABAP program.
 
 ```typescript
 import { ADTClient } from 'abap-adt-api';
@@ -116,62 +116,62 @@ async function editProgram() {
   try {
     await client.login();
     
-    // 상태 유지 세션으로 설정 (객체 잠금을 위해 필요)
+    // Set to stateful session (required for object locking)
     client.stateful = "stateful";
     
-    // 프로그램 구조 조회
+    // Retrieve program structure
     const objectUrl = '/sap/bc/adt/programs/programs/Z_YOUR_PROGRAM';
     const objectStructure = await client.objectStructure(objectUrl);
     
-    // 소스 코드 URL 얻기
+    // Get source code URL
     const sourceUrl = ADTClient.mainInclude(objectStructure);
     
-    // 소스 코드 조회
+    // Retrieve source code
     const source = await client.getObjectSource(sourceUrl);
-    console.log('현재 소스 코드:', source);
+    console.log('Current source code:', source);
     
-    // 객체 잠금
+    // Lock object
     const lock = await client.lock(objectUrl);
-    console.log('객체 잠금 핸들:', lock.LOCK_HANDLE);
+    console.log('Object lock handle:', lock.LOCK_HANDLE);
     
-    // 수정된 소스 코드
-    const modifiedSource = source + '\n* 주석 추가됨';
+    // Modified source code
+    const modifiedSource = source + '\n* Comment added';
     
-    // 소스 코드 업데이트
+    // Update source code
     await client.setObjectSource(sourceUrl, modifiedSource, lock.LOCK_HANDLE);
-    console.log('소스 코드 업데이트 성공');
+    console.log('Source code update successful');
     
-    // 활성화
+    // Activation
     const activationResult = await client.activate(
       objectStructure.metaData['adtcore:name'], 
       objectUrl
     );
     
     if (activationResult.success) {
-      console.log('활성화 성공');
+      console.log('Activation successful');
     } else {
-      console.log('활성화 실패:', activationResult.messages);
+      console.log('Activation failed:', activationResult.messages);
     }
     
-    // 객체 잠금 해제
+    // Release object lock
     await client.unLock(objectUrl, lock.LOCK_HANDLE);
-    console.log('객체 잠금 해제됨');
+    console.log('Object lock released');
     
-    // 세션 종료
+    // End session
     await client.logout();
   } catch (error) {
-    console.error('오류 발생:', error);
+    console.error('Error occurred:', error);
   }
 }
 
 editProgram();
 ```
 
-## 다음 단계
+## Next Steps
 
-기본적인 설정과 사용법을 알아보았습니다. 이제 다음 단계로 진행하여 더 많은 API 기능을 살펴보세요.
+We've covered the basic setup and usage. Now move on to explore more API features.
 
-- [객체 관리](/api/object-management) - ABAP 객체 관리 기능
-- [개발 기능](/api/development) - 코드 개발 관련 기능
-- [트랜스포트](/api/transport) - 트랜스포트 관리
-- [디버깅](/api/debugging) - ABAP 디버깅 기능
+- [Object Management](/api/object-management) - ABAP object management features
+- [Development Features](/api/development) - Code development related features
+- [Transport](/api/transport) - Transport management
+- [Debugging](/api/debugging) - ABAP debugging features

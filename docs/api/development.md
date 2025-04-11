@@ -1,10 +1,10 @@
-# 개발 기능
+# Development Features
 
-이 페이지에서는 ABAP ADT API를 사용하여 코드 개발을 지원하는 기능들을 설명합니다. 구문 검사, 코드 완성, 리팩토링 등의 기능이 포함됩니다.
+This page describes features that support code development using the ABAP ADT API. It includes functionality for syntax checking, code completion, refactoring, and more.
 
-## 구문 검사
+## Syntax Checking
 
-### 구문 검사 수행
+### Perform Syntax Check
 
 ```typescript
 async syntaxCheck(cdsUrl: string): Promise<SyntaxCheckResult[]>
@@ -18,40 +18,40 @@ async syntaxCheck(
 ): Promise<SyntaxCheckResult[]>
 ```
 
-ABAP 코드의 구문을 검사합니다. CDS 객체와 일반 ABAP 객체에 대해 다른 형식의 호출을 지원합니다.
+Checks the syntax of ABAP code. Supports different call formats for CDS objects and regular ABAP objects.
 
-**매개변수 (CDS 형식):**
-- `cdsUrl`: CDS 객체 URL
+**Parameters (CDS format):**
+- `cdsUrl`: CDS object URL
 
-**매개변수 (일반 형식):**
-- `url`: 객체 URL
-- `mainUrl`: 메인 URL
-- `content`: 검사할 소스 코드
-- `mainProgram`: 메인 프로그램 (선택적)
-- `version`: 객체 버전 (기본값: 'active')
+**Parameters (regular format):**
+- `url`: Object URL
+- `mainUrl`: Main URL
+- `content`: Source code to check
+- `mainProgram`: Main program (optional)
+- `version`: Object version (default: 'active')
 
-**반환 값:**
-- `SyntaxCheckResult[]`: 구문 검사 결과 배열
+**Return value:**
+- `SyntaxCheckResult[]`: Array of syntax check results
 
-**예제:**
+**Example:**
 ```typescript
-// 객체 구조 조회
+// Retrieve object structure
 const objectStructure = await client.objectStructure('/sap/bc/adt/programs/programs/ZEXAMPLE');
 const sourceUrl = ADTClient.mainInclude(objectStructure);
 
-// 소스 코드 조회
+// Retrieve source code
 const source = await client.getObjectSource(sourceUrl);
 
-// 구문 검사 수행
+// Perform syntax check
 const syntaxResults = await client.syntaxCheck(
-  objectStructure.objectUrl,  // 객체 URL
-  sourceUrl,                  // 메인 URL
-  source                      // 소스 코드
+  objectStructure.objectUrl,  // Object URL
+  sourceUrl,                  // Main URL
+  source                      // Source code
 );
 
-// 검사 결과 출력
+// Output check results
 if (syntaxResults.length === 0) {
-  console.log('구문 오류가 없습니다.');
+  console.log('No syntax errors.');
 } else {
   syntaxResults.forEach(result => {
     console.log(`${result.line}:${result.offset} - ${result.severity}: ${result.text}`);
@@ -59,29 +59,29 @@ if (syntaxResults.length === 0) {
 }
 ```
 
-### 구문 검사 유형 조회
+### Retrieve Syntax Check Types
 
 ```typescript
 async syntaxCheckTypes(): Promise<Map<string, string[]>>
 ```
 
-사용 가능한 구문 검사 유형을 조회합니다.
+Retrieves available syntax check types.
 
-**반환 값:**
-- `Map<string, string[]>`: 검사기와 지원되는 유형의 맵
+**Return value:**
+- `Map<string, string[]>`: Map of checkers and their supported types
 
-**예제:**
+**Example:**
 ```typescript
 const checkTypes = await client.syntaxCheckTypes();
-console.log('사용 가능한 검사기:');
+console.log('Available checkers:');
 for (const [checker, types] of checkTypes.entries()) {
   console.log(`- ${checker}: ${types.join(', ')}`);
 }
 ```
 
-## 코드 완성
+## Code Completion
 
-### 코드 완성 제안
+### Code Completion Proposals
 
 ```typescript
 async codeCompletion(
@@ -92,33 +92,33 @@ async codeCompletion(
 ): Promise<CompletionProposal[]>
 ```
 
-코드 완성 제안을 가져옵니다.
+Gets code completion proposals.
 
-**매개변수:**
-- `sourceUrl`: 소스 코드 URL
-- `source`: 소스 코드
-- `line`: 커서 위치 줄 번호
-- `column`: 커서 위치 열 번호
+**Parameters:**
+- `sourceUrl`: Source code URL
+- `source`: Source code
+- `line`: Cursor position line number
+- `column`: Cursor position column number
 
-**반환 값:**
-- `CompletionProposal[]`: 완성 제안 배열
+**Return value:**
+- `CompletionProposal[]`: Array of completion proposals
 
-**예제:**
+**Example:**
 ```typescript
-// 소스 코드 URL과 소스 코드
+// Source code URL and source code
 const sourceUrl = '/sap/bc/adt/programs/programs/ZEXAMPLE/source/main';
 const source = 'REPORT zexample.\n\nDATA: lv_text TYPE string.\n\nlv_text = ';
 
-// 줄 3, 열 11 위치에서 완성 제안 가져오기 (lv_text = |<커서>)
+// Get completion proposals at line 3, column 11 (lv_text = |<cursor>)
 const completions = await client.codeCompletion(sourceUrl, source, 3, 11);
 
-// 제안 출력
+// Output proposals
 completions.forEach(completion => {
   console.log(completion.IDENTIFIER);
 });
 ```
 
-### 코드 완성 항목 정보
+### Code Completion Element Information
 
 ```typescript
 async codeCompletionElement(
@@ -129,31 +129,31 @@ async codeCompletionElement(
 ): Promise<CompletionElementInfo | string>
 ```
 
-코드 완성 항목에 대한 상세 정보를 가져옵니다.
+Gets detailed information about a code completion element.
 
-**매개변수:**
-- `sourceUrl`: 소스 코드 URL
-- `source`: 소스 코드
-- `line`: 커서 위치 줄 번호
-- `column`: 커서 위치 열 번호
+**Parameters:**
+- `sourceUrl`: Source code URL
+- `source`: Source code
+- `line`: Cursor position line number
+- `column`: Cursor position column number
 
-**반환 값:**
-- `CompletionElementInfo | string`: 완성 항목 정보 또는 정보 문자열
+**Return value:**
+- `CompletionElementInfo | string`: Completion element information or information string
 
-**예제:**
+**Example:**
 ```typescript
-// 코드 완성 항목 정보 가져오기
+// Get code completion element information
 const elementInfo = await client.codeCompletionElement(sourceUrl, source, 3, 11);
 
-// 항목 정보 출력
+// Output element information
 if (typeof elementInfo !== 'string') {
-  console.log(`이름: ${elementInfo.name}`);
-  console.log(`유형: ${elementInfo.type}`);
-  console.log(`문서: ${elementInfo.doc}`);
+  console.log(`Name: ${elementInfo.name}`);
+  console.log(`Type: ${elementInfo.type}`);
+  console.log(`Documentation: ${elementInfo.doc}`);
 }
 ```
 
-### 전체 코드 완성
+### Full Code Completion
 
 ```typescript
 async codeCompletionFull(
@@ -165,19 +165,19 @@ async codeCompletionFull(
 ): Promise<string>
 ```
 
-전체 코드 완성 내용을 가져옵니다.
+Gets the full code completion content.
 
-**매개변수:**
-- `sourceUrl`: 소스 코드 URL
-- `source`: 소스 코드
-- `line`: 커서 위치 줄 번호
-- `column`: 커서 위치 열 번호
-- `patternKey`: 패턴 키
+**Parameters:**
+- `sourceUrl`: Source code URL
+- `source`: Source code
+- `line`: Cursor position line number
+- `column`: Cursor position column number
+- `patternKey`: Pattern key
 
-**반환 값:**
-- `string`: 완성된 코드
+**Return value:**
+- `string`: Completed code
 
-**예제:**
+**Example:**
 ```typescript
 const fullCompletion = await client.codeCompletionFull(
   sourceUrl,
@@ -186,12 +186,12 @@ const fullCompletion = await client.codeCompletionFull(
   11,
   'pattern1'
 );
-console.log('완성된 코드:', fullCompletion);
+console.log('Completed code:', fullCompletion);
 ```
 
-## 정의 및 사용처 탐색
+## Definition and Usage Navigation
 
-### 정의 찾기
+### Find Definition
 
 ```typescript
 async findDefinition(
@@ -205,36 +205,36 @@ async findDefinition(
 ): Promise<DefinitionLocation>
 ```
 
-코드 요소의 정의 위치를 찾습니다.
+Finds the definition location of a code element.
 
-**매개변수:**
-- `url`: 소스 코드 URL
-- `source`: 소스 코드
-- `line`: 줄 번호
-- `startCol`: 시작 열
-- `endCol`: 끝 열
-- `implementation`: 구현을 찾을지 여부 (선택적, 기본값: false)
-- `mainProgram`: 메인 프로그램 (선택적)
+**Parameters:**
+- `url`: Source code URL
+- `source`: Source code
+- `line`: Line number
+- `startCol`: Start column
+- `endCol`: End column
+- `implementation`: Whether to find implementation (optional, default: false)
+- `mainProgram`: Main program (optional)
 
-**반환 값:**
-- `DefinitionLocation`: 정의 위치
+**Return value:**
+- `DefinitionLocation`: Definition location
 
-**예제:**
+**Example:**
 ```typescript
-// 소스 코드에서 REPORT 키워드의 정의 찾기
+// Find definition of REPORT keyword in source code
 const definition = await client.findDefinition(
   sourceUrl,
   source,
-  1,       // 줄
-  0,       // 시작 열
-  6,       // 끝 열
-  false    // 정의 찾기 (구현 아님)
+  1,       // Line
+  0,       // Start column
+  6,       // End column
+  false    // Find definition (not implementation)
 );
 
-console.log(`정의 위치: ${definition.url}#${definition.line},${definition.column}`);
+console.log(`Definition location: ${definition.url}#${definition.line},${definition.column}`);
 ```
 
-### 사용처 찾기
+### Find Usage References
 
 ```typescript
 async usageReferences(
@@ -244,35 +244,35 @@ async usageReferences(
 ): Promise<UsageReference[]>
 ```
 
-코드 요소의 사용처를 찾습니다.
+Finds usage references of a code element.
 
-**매개변수:**
-- `url`: 객체 URL
-- `line`: 줄 번호 (선택적)
-- `column`: 열 번호 (선택적)
+**Parameters:**
+- `url`: Object URL
+- `line`: Line number (optional)
+- `column`: Column number (optional)
 
-**반환 값:**
-- `UsageReference[]`: 사용처 참조 배열
+**Return value:**
+- `UsageReference[]`: Array of usage references
 
-**예제:**
+**Example:**
 ```typescript
-// 객체의 모든 사용처 찾기
+// Find all usages of an object
 const usages = await client.usageReferences('/sap/bc/adt/programs/programs/ZEXAMPLE');
 
-// 특정 위치의 요소 사용처 찾기
+// Find usages of an element at a specific position
 const elementUsages = await client.usageReferences(
   '/sap/bc/adt/programs/programs/ZEXAMPLE',
-  10,  // 줄
-  5    // 열
+  10,  // Line
+  5    // Column
 );
 
-// 사용처 출력
+// Output usages
 usages.forEach(usage => {
   console.log(`${usage['adtcore:type']}: ${usage['adtcore:name']}`);
 });
 ```
 
-### 사용처 코드 조각
+### Usage Reference Snippets
 
 ```typescript
 async usageReferenceSnippets(
@@ -280,23 +280,23 @@ async usageReferenceSnippets(
 ): Promise<UsageReferenceSnippet[]>
 ```
 
-사용처 참조에 대한 코드 조각을 가져옵니다.
+Gets code snippets for usage references.
 
-**매개변수:**
-- `references`: 사용처 참조 배열
+**Parameters:**
+- `references`: Array of usage references
 
-**반환 값:**
-- `UsageReferenceSnippet[]`: 사용처 코드 조각 배열
+**Return value:**
+- `UsageReferenceSnippet[]`: Array of usage code snippets
 
-**예제:**
+**Example:**
 ```typescript
-// 사용처 찾기
+// Find usages
 const usages = await client.usageReferences('/sap/bc/adt/programs/programs/ZEXAMPLE');
 
-// 사용처 코드 조각 가져오기
+// Get usage code snippets
 const snippets = await client.usageReferenceSnippets(usages);
 
-// 코드 조각 출력
+// Output snippets
 snippets.forEach(snippet => {
   snippet.snippets.forEach(s => {
     console.log(`${s.description}:\n${s.content}`);
@@ -304,9 +304,9 @@ snippets.forEach(snippet => {
 });
 ```
 
-## 빠른 수정 및 리팩토링
+## Quick Fixes and Refactoring
 
-### 빠른 수정 제안
+### Quick Fix Proposals
 
 ```typescript
 async fixProposals(
@@ -317,34 +317,34 @@ async fixProposals(
 ): Promise<FixProposal[]>
 ```
 
-코드 문제에 대한 빠른 수정 제안을 가져옵니다.
+Gets quick fix proposals for code issues.
 
-**매개변수:**
-- `url`: 소스 코드 URL
-- `source`: 소스 코드
-- `line`: 줄 번호
-- `column`: 열 번호
+**Parameters:**
+- `url`: Source code URL
+- `source`: Source code
+- `line`: Line number
+- `column`: Column number
 
-**반환 값:**
-- `FixProposal[]`: 수정 제안 배열
+**Return value:**
+- `FixProposal[]`: Array of fix proposals
 
-**예제:**
+**Example:**
 ```typescript
-// 코드 문제에 대한 수정 제안 가져오기
+// Get fix proposals for a code issue
 const fixes = await client.fixProposals(
   sourceUrl,
   source,
-  5,  // 줄
-  10  // 열
+  5,  // Line
+  10  // Column
 );
 
-// 제안 출력
+// Output proposals
 fixes.forEach(fix => {
   console.log(`${fix['adtcore:name']}: ${fix['adtcore:description']}`);
 });
 ```
 
-### 빠른 수정 적용
+### Apply Quick Fix
 
 ```typescript
 async fixEdits(
@@ -353,32 +353,32 @@ async fixEdits(
 ): Promise<Delta[]>
 ```
 
-빠른 수정 제안을 적용합니다.
+Applies a quick fix proposal.
 
-**매개변수:**
-- `proposal`: 수정 제안
-- `source`: 소스 코드
+**Parameters:**
+- `proposal`: Fix proposal
+- `source`: Source code
 
-**반환 값:**
-- `Delta[]`: 변경 사항 배열
+**Return value:**
+- `Delta[]`: Array of changes
 
-**예제:**
+**Example:**
 ```typescript
-// 수정 제안 가져오기
+// Get fix proposals
 const fixes = await client.fixProposals(sourceUrl, source, 5, 10);
 if (fixes.length > 0) {
-  // 첫 번째 제안 적용
+  // Apply first proposal
   const edits = await client.fixEdits(fixes[0], source);
   
-  // 변경 사항 출력
+  // Output changes
   edits.forEach(edit => {
-    console.log(`변경 위치: ${edit.range.start.line},${edit.range.start.column}`);
-    console.log(`변경 내용: ${edit.content}`);
+    console.log(`Change location: ${edit.range.start.line},${edit.range.start.column}`);
+    console.log(`Change content: ${edit.content}`);
   });
 }
 ```
 
-### 리팩토링: 이름 변경
+### Refactoring: Rename
 
 ```typescript
 async renameEvaluate(
@@ -389,16 +389,16 @@ async renameEvaluate(
 ): Promise<RenameRefactoringProposal>
 ```
 
-이름 변경 리팩토링을 평가합니다.
+Evaluates a rename refactoring.
 
-**매개변수:**
-- `uri`: 소스 코드 URL
-- `line`: 줄 번호
-- `startColumn`: 시작 열
-- `endColumn`: 끝 열
+**Parameters:**
+- `uri`: Source code URL
+- `line`: Line number
+- `startColumn`: Start column
+- `endColumn`: End column
 
-**반환 값:**
-- `RenameRefactoringProposal`: 이름 변경 리팩토링 제안
+**Return value:**
+- `RenameRefactoringProposal`: Rename refactoring proposal
 
 ```typescript
 async renamePreview(
@@ -407,14 +407,14 @@ async renamePreview(
 ): Promise<RenameRefactoring>
 ```
 
-이름 변경 리팩토링 미리보기를 가져옵니다.
+Gets a preview of a rename refactoring.
 
-**매개변수:**
-- `renameRefactoring`: 이름 변경 리팩토링 제안
-- `transport`: 트랜스포트 번호 (선택적)
+**Parameters:**
+- `renameRefactoring`: Rename refactoring proposal
+- `transport`: Transport number (optional)
 
-**반환 값:**
-- `RenameRefactoring`: 이름 변경 리팩토링
+**Return value:**
+- `RenameRefactoring`: Rename refactoring
 
 ```typescript
 async renameExecute(
@@ -422,37 +422,37 @@ async renameExecute(
 ): Promise<RenameRefactoring>
 ```
 
-이름 변경 리팩토링을 실행합니다.
+Executes a rename refactoring.
 
-**매개변수:**
-- `refactoring`: 이름 변경 리팩토링
+**Parameters:**
+- `refactoring`: Rename refactoring
 
-**반환 값:**
-- `RenameRefactoring`: 실행된 이름 변경 리팩토링
+**Return value:**
+- `RenameRefactoring`: Executed rename refactoring
 
-**예제:**
+**Example:**
 ```typescript
-// 이름 변경 리팩토링 평가
+// Evaluate rename refactoring
 const proposal = await client.renameEvaluate(
   sourceUrl,
-  10,       // 줄
-  5,        // 시작 열
-  15        // 끝 열
+  10,       // Line
+  5,        // Start column
+  15        // End column
 );
 
-// 새 이름 설정
+// Set new name
 proposal.newName = 'NEW_NAME';
 
-// 미리보기
+// Preview
 const preview = await client.renamePreview(proposal, 'DEVK900000');
 
-// 리팩토링 실행
+// Execute refactoring
 const result = await client.renameExecute(preview);
 
-console.log('이름 변경 완료:', result);
+console.log('Rename completed:', result);
 ```
 
-### 리팩토링: 메서드 추출
+### Refactoring: Extract Method
 
 ```typescript
 async extractMethodEvaluate(
@@ -461,14 +461,14 @@ async extractMethodEvaluate(
 ): Promise<ExtractMethodProposal>
 ```
 
-메서드 추출 리팩토링을 평가합니다.
+Evaluates an extract method refactoring.
 
-**매개변수:**
-- `uri`: 소스 코드 URL
-- `range`: 코드 범위
+**Parameters:**
+- `uri`: Source code URL
+- `range`: Code range
 
-**반환 값:**
-- `ExtractMethodProposal`: 메서드 추출 제안
+**Return value:**
+- `ExtractMethodProposal`: Extract method proposal
 
 ```typescript
 async extractMethodPreview(
@@ -476,13 +476,13 @@ async extractMethodPreview(
 ): Promise<GenericRefactoring>
 ```
 
-메서드 추출 리팩토링 미리보기를 가져옵니다.
+Gets a preview of an extract method refactoring.
 
-**매개변수:**
-- `proposal`: 메서드 추출 제안
+**Parameters:**
+- `proposal`: Extract method proposal
 
-**반환 값:**
-- `GenericRefactoring`: 리팩토링 정보
+**Return value:**
+- `GenericRefactoring`: Refactoring information
 
 ```typescript
 async extractMethodExecute(
@@ -490,17 +490,17 @@ async extractMethodExecute(
 ): Promise<GenericRefactoring>
 ```
 
-메서드 추출 리팩토링을 실행합니다.
+Executes an extract method refactoring.
 
-**매개변수:**
-- `refactoring`: 리팩토링 정보
+**Parameters:**
+- `refactoring`: Refactoring information
 
-**반환 값:**
-- `GenericRefactoring`: 실행된 리팩토링 정보
+**Return value:**
+- `GenericRefactoring`: Executed refactoring information
 
-**예제:**
+**Example:**
 ```typescript
-// 메서드 추출 리팩토링 평가
+// Evaluate extract method refactoring
 const proposal = await client.extractMethodEvaluate(
   '/sap/bc/adt/oo/classes/ZCL_EXAMPLE/source/main',
   {
@@ -509,23 +509,23 @@ const proposal = await client.extractMethodEvaluate(
   }
 );
 
-// 메서드 이름 설정
+// Set method name
 proposal.name = 'EXTRACTED_METHOD';
 proposal.isStatic = false;
 proposal.visibility = 'PRIVATE';
 
-// 미리보기
+// Preview
 const preview = await client.extractMethodPreview(proposal);
 
-// 리팩토링 실행
+// Execute refactoring
 const result = await client.extractMethodExecute(preview);
 
-console.log('메서드 추출 완료');
+console.log('Method extraction completed');
 ```
 
-## 문서화 및 코드 스타일
+## Documentation and Code Style
 
-### ABAP 문서 조회
+### Retrieve ABAP Documentation
 
 ```typescript
 async abapDocumentation(
@@ -537,46 +537,46 @@ async abapDocumentation(
 ): Promise<string>
 ```
 
-ABAP 문서를 조회합니다.
+Retrieves ABAP documentation.
 
-**매개변수:**
-- `objectUri`: 객체 URI
-- `body`: 소스 코드
-- `line`: 줄 번호
-- `column`: 열 번호
-- `language`: 언어 (기본값: "EN")
+**Parameters:**
+- `objectUri`: Object URI
+- `body`: Source code
+- `line`: Line number
+- `column`: Column number
+- `language`: Language (default: "EN")
 
-**반환 값:**
-- `string`: ABAP 문서 HTML
+**Return value:**
+- `string`: ABAP documentation HTML
 
-**예제:**
+**Example:**
 ```typescript
-// 객체 URI와 소스 코드
+// Object URI and source code
 const objectUri = '/sap/bc/adt/programs/programs/ZEXAMPLE';
 const source = 'REPORT zexample.\n\nDATA: lv_text TYPE string.';
 
-// 줄 1, 열 0 위치에서 문서 조회 (REPORT 키워드)
+// Retrieve documentation at line 1, column 0 (REPORT keyword)
 const documentation = await client.abapDocumentation(
   objectUri,
   source,
-  1,     // 줄
-  0,     // 열
-  'KO'   // 한국어 문서
+  1,     // Line
+  0,     // Column
+  'EN'   // English documentation
 );
 
-console.log('문서:', documentation);
+console.log('Documentation:', documentation);
 ```
 
-### 코드 스타일: Pretty Printer
+### Code Style: Pretty Printer
 
 ```typescript
 async prettyPrinterSetting(): Promise<PrettyPrinterSettings>
 ```
 
-Pretty Printer 설정을 조회합니다.
+Retrieves Pretty Printer settings.
 
-**반환 값:**
-- `PrettyPrinterSettings`: Pretty Printer 설정
+**Return value:**
+- `PrettyPrinterSettings`: Pretty Printer settings
 
 ```typescript
 async setPrettyPrinterSetting(
@@ -585,42 +585,42 @@ async setPrettyPrinterSetting(
 ): Promise<string>
 ```
 
-Pretty Printer 설정을 변경합니다.
+Changes Pretty Printer settings.
 
-**매개변수:**
-- `indent`: 들여쓰기 사용 여부
-- `style`: 스타일 ('toLower', 'toUpper', 'keywordUpper', 'keywordLower', 'keywordAuto', 'none' 중 하나)
+**Parameters:**
+- `indent`: Whether to use indentation
+- `style`: Style ('toLower', 'toUpper', 'keywordUpper', 'keywordLower', 'keywordAuto', 'none')
 
-**반환 값:**
-- `string`: 응답 메시지
+**Return value:**
+- `string`: Response message
 
 ```typescript
 async prettyPrinter(body: string): Promise<string>
 ```
 
-Pretty Printer를 사용하여 코드 서식을 지정합니다.
+Formats code using Pretty Printer.
 
-**매개변수:**
-- `body`: 원본 소스 코드
+**Parameters:**
+- `body`: Original source code
 
-**반환 값:**
-- `string`: 서식이 지정된 소스 코드
+**Return value:**
+- `string`: Formatted source code
 
-**예제:**
+**Example:**
 ```typescript
-// Pretty Printer 설정 조회
+// Retrieve Pretty Printer settings
 const settings = await client.prettyPrinterSetting();
-console.log('현재 설정:', settings);
+console.log('Current settings:', settings);
 
-// 설정 변경
+// Change settings
 await client.setPrettyPrinterSetting(true, 'keywordUpper');
 
-// 코드 서식 지정
+// Format code
 const formattedSource = await client.prettyPrinter(source);
-console.log('서식이 지정된 소스 코드:', formattedSource);
+console.log('Formatted source code:', formattedSource);
 ```
 
-## 유형 계층 구조
+## Type Hierarchy
 
 ```typescript
 async typeHierarchy(
@@ -632,66 +632,66 @@ async typeHierarchy(
 ): Promise<HierarchyNode[]>
 ```
 
-유형 계층 구조를 조회합니다.
+Retrieves type hierarchy.
 
-**매개변수:**
-- `url`: 소스 코드 URL
-- `body`: 소스 코드
-- `line`: 줄 번호
-- `offset`: 열 번호
-- `superTypes`: 상위 유형 포함 여부 (선택적, 기본값: false)
+**Parameters:**
+- `url`: Source code URL
+- `body`: Source code
+- `line`: Line number
+- `offset`: Column number
+- `superTypes`: Whether to include super types (optional, default: false)
 
-**반환 값:**
-- `HierarchyNode[]`: 계층 구조 노드 배열
+**Return value:**
+- `HierarchyNode[]`: Array of hierarchy nodes
 
-**예제:**
+**Example:**
 ```typescript
-// 클래스 계층 구조 조회
+// Retrieve class hierarchy
 const hierarchy = await client.typeHierarchy(
   '/sap/bc/adt/oo/classes/ZCL_EXAMPLE/source/main',
   source,
-  5,     // 줄
-  10,    // 열
-  true   // 상위 유형 포함
+  5,     // Line
+  10,    // Column
+  true   // Include super types
 );
 
-// 계층 구조 출력
+// Output hierarchy
 hierarchy.forEach(node => {
   console.log(`${node.type}: ${node.name}`);
 });
 ```
 
-## 클래스 구성요소
+## Class Components
 
 ```typescript
 async classComponents(url: string): Promise<ClassComponent>
 ```
 
-클래스 구성요소를 조회합니다.
+Retrieves class components.
 
-**매개변수:**
-- `url`: 클래스 URL
+**Parameters:**
+- `url`: Class URL
 
-**반환 값:**
-- `ClassComponent`: 클래스 구성요소 정보
+**Return value:**
+- `ClassComponent`: Class component information
 
-**예제:**
+**Example:**
 ```typescript
-// 클래스 구성요소 조회
+// Retrieve class components
 const components = await client.classComponents('/sap/bc/adt/oo/classes/ZCL_EXAMPLE');
 
-// 구성요소 정보 출력
-console.log(`클래스: ${components['adtcore:name']}`);
-console.log(`가시성: ${components.visibility}`);
+// Output component information
+console.log(`Class: ${components['adtcore:name']}`);
+console.log(`Visibility: ${components.visibility}`);
 
-// 메서드 목록
+// Method list
 const methods = components.components.filter(c => c['adtcore:type'] === 'method');
 methods.forEach(method => {
-  console.log(`메서드: ${method['adtcore:name']}`);
+  console.log(`Method: ${method['adtcore:name']}`);
 });
 ```
 
-## 조각 매핑
+## Fragment Mapping
 
 ```typescript
 async fragmentMappings(
@@ -701,31 +701,31 @@ async fragmentMappings(
 ): Promise<FragmentLocation>
 ```
 
-객체 조각의 위치를 찾습니다.
+Finds the location of an object fragment.
 
-**매개변수:**
-- `url`: 객체 URL
-- `type`: 조각 유형
-- `name`: 조각 이름
+**Parameters:**
+- `url`: Object URL
+- `type`: Fragment type
+- `name`: Fragment name
 
-**반환 값:**
-- `FragmentLocation`: 조각 위치
+**Return value:**
+- `FragmentLocation`: Fragment location
 
-**예제:**
+**Example:**
 ```typescript
-// 클래스의 메서드 위치 찾기
+// Find the location of a method in a class
 const location = await client.fragmentMappings(
   '/sap/bc/adt/oo/classes/ZCL_EXAMPLE',
   'method',
   'CONSTRUCTOR'
 );
 
-console.log(`메서드 위치: ${location.uri}#${location.line},${location.column}`);
+console.log(`Method location: ${location.uri}#${location.line},${location.column}`);
 ```
 
-## 예제: 코드 개발 워크플로우
+## Example: Code Development Workflow
 
-다음 예제는 코드 개발 워크플로우를 보여줍니다:
+The following example demonstrates a code development workflow:
 
 ```typescript
 import { ADTClient } from 'abap-adt-api';
@@ -735,54 +735,54 @@ async function developmentWorkflow() {
   await client.login();
   
   try {
-    // 상태 유지 세션으로 설정
+    // Set stateful session
     client.stateful = "stateful";
     
-    // 1. 객체 구조 조회
+    // 1. Retrieve object structure
     const programUrl = '/sap/bc/adt/programs/programs/ZEXAMPLE';
     const programStructure = await client.objectStructure(programUrl);
     const sourceUrl = ADTClient.mainInclude(programStructure);
     
-    // 2. 소스 코드 조회
+    // 2. Retrieve source code
     let source = await client.getObjectSource(sourceUrl);
-    console.log('현재 소스 코드:', source);
+    console.log('Current source code:', source);
     
-    // 3. 구문 검사
+    // 3. Syntax check
     const syntaxResults = await client.syntaxCheck(programUrl, sourceUrl, source);
     if (syntaxResults.length === 0) {
-      console.log('구문 오류 없음');
+      console.log('No syntax errors');
     } else {
-      console.log('구문 오류:', syntaxResults);
+      console.log('Syntax errors:', syntaxResults);
     }
     
-    // 4. 코드 완성 제안
+    // 4. Code completion proposals
     const completions = await client.codeCompletion(sourceUrl, source, 3, 10);
-    console.log('완성 제안:', completions.map(c => c.IDENTIFIER));
+    console.log('Completion proposals:', completions.map(c => c.IDENTIFIER));
     
-    // 5. 객체 잠금
+    // 5. Lock object
     const lock = await client.lock(programUrl);
     
-    // 6. 코드 수정
-    source += '\n* 수정됨: ' + new Date().toISOString();
+    // 6. Modify code
+    source += '\n* Modified: ' + new Date().toISOString();
     
-    // 7. Pretty Printer로 서식 지정
+    // 7. Format with Pretty Printer
     source = await client.prettyPrinter(source);
     
-    // 8. 수정된 소스 저장
+    // 8. Save modified source
     await client.setObjectSource(sourceUrl, source, lock.LOCK_HANDLE);
-    console.log('소스 코드 저장됨');
+    console.log('Source code saved');
     
-    // 9. 활성화
+    // 9. Activate
     const result = await client.activate(
       programStructure.metaData['adtcore:name'],
       programUrl
     );
-    console.log('활성화 결과:', result.success ? '성공' : '실패');
+    console.log('Activation result:', result.success ? 'Success' : 'Failure');
     
-    // 10. 객체 잠금 해제
+    // 10. Release object lock
     await client.unLock(programUrl, lock.LOCK_HANDLE);
   } catch (error) {
-    console.error('오류 발생:', error);
+    console.error('Error occurred:', error);
   } finally {
     await client.logout();
   }
@@ -791,9 +791,9 @@ async function developmentWorkflow() {
 developmentWorkflow();
 ```
 
-## 참고 사항
+## Notes
 
-- 코드 완성과 구문 검사는 상태 비유지 세션에서도 작동하지만, 코드 수정은 항상 상태 유지 세션이 필요합니다.
-- 리팩토링 작업은 보통 트랜스포트를 필요로 합니다.
-- ABAP 문서 조회는 시스템에 설치된 언어에 따라 제한될 수 있습니다.
-- Pretty Printer 설정은 서버 설정에 영향을 미치므로 공유 시스템에서는 주의해서 변경하세요.
+- Code completion and syntax checking work in stateless sessions as well, but code modification always requires a stateful session.
+- Refactoring operations typically require a transport.
+- ABAP documentation retrieval may be limited by the languages installed in the system.
+- Pretty Printer settings affect server settings, so be careful when changing them in shared systems.

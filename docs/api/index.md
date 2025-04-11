@@ -1,94 +1,94 @@
-# API 문서 개요
+# API Documentation Overview
 
-ABAP ADT API 라이브러리는 SAP ABAP Development Tools(ADT)의 REST API를 래핑하여 사용하기 쉬운 JavaScript/TypeScript 인터페이스를 제공합니다. 이 문서에서는 라이브러리의 주요 구성 요소와 기능을 살펴봅니다.
+The ABAP ADT API library wraps the REST API of SAP ABAP Development Tools (ADT) to provide an easy-to-use JavaScript/TypeScript interface. This documentation explores the main components and features of the library.
 
-## 라이브러리 구조
+## Library Structure
 
-ABAP ADT API 라이브러리는 크게 다음과 같은 구성 요소로 이루어져 있습니다.
+The ABAP ADT API library consists of the following main components:
 
-### 핵심 클래스
+### Core Classes
 
-- **ADTClient**: 라이브러리의 주요 클래스로, ABAP 시스템과의 모든 상호작용을 처리합니다.
-- **AdtHTTP**: HTTP 통신을 담당하는 내부 클래스로, RESTful API 호출을 처리합니다.
+- **ADTClient**: The primary class of the library, handling all interactions with the ABAP system.
+- **AdtHTTP**: An internal class responsible for HTTP communication, handling RESTful API calls.
 
-### 주요 API 모듈
+### Main API Modules
 
-라이브러리는 다음과 같은 주요 API 모듈로 구분됩니다:
+The library is divided into the following main API modules:
 
-1. **기본 기능**: 로그인, 세션 관리, 시스템 정보 등
-2. **객체 관리**: ABAP 객체 탐색, 생성, 수정, 삭제 등
-3. **개발 기능**: 코드 편집, 구문 검사, 코드 완성, 리팩토링 등
-4. **트랜스포트**: 트랜스포트 요청 관리
-5. **ABAP Git**: ABAP Git 저장소 관리
-6. **디버깅**: ABAP 프로그램 디버깅
-7. **테스트**: 단위 테스트 실행 및 결과 처리
-8. **고급 기능**: ATC(ABAP Test Cockpit), 추적 등
+1. **Basic Features**: Login, session management, system information, etc.
+2. **Object Management**: ABAP object exploration, creation, modification, deletion, etc.
+3. **Development Features**: Code editing, syntax checking, code completion, refactoring, etc.
+4. **Transport**: Transport request management
+5. **ABAP Git**: ABAP Git repository management
+6. **Debugging**: ABAP program debugging
+7. **Testing**: Unit test execution and result handling
+8. **Advanced Features**: ATC (ABAP Test Cockpit), tracing, etc.
 
-## API 사용 패턴
+## API Usage Patterns
 
-ABAP ADT API는 일반적으로 다음과 같은 패턴으로 사용됩니다:
+The ABAP ADT API is typically used with the following patterns:
 
-1. **클라이언트 초기화 및 로그인**
+1. **Client Initialization and Login**
    ```typescript
    const client = new ADTClient(url, username, password);
    await client.login();
    ```
 
-2. **객체 조회 및 조작**
+2. **Object Retrieval and Manipulation**
    ```typescript
    const objectStructure = await client.objectStructure(objectUrl);
    ```
 
-3. **상태 유지가 필요한 작업 수행**
+3. **Performing Operations Requiring State**
    ```typescript
-   client.stateful = "stateful";  // 상태 유지 세션 설정
-   const lock = await client.lock(objectUrl);  // 객체 잠금
-   // 작업 수행...
-   await client.unLock(objectUrl, lock.LOCK_HANDLE);  // 잠금 해제
+   client.stateful = "stateful";  // Set stateful session
+   const lock = await client.lock(objectUrl);  // Lock object
+   // Perform operations...
+   await client.unLock(objectUrl, lock.LOCK_HANDLE);  // Release lock
    ```
 
-4. **비동기 작업 처리**
+4. **Handling Asynchronous Operations**
    ```typescript
-   // 대부분의 API 메서드는 Promise를 반환합니다
+   // Most API methods return Promises
    try {
      const result = await client.someAsyncMethod();
-     // 결과 처리...
+     // Process results...
    } catch (error) {
-     // 오류 처리...
+     // Handle errors...
    }
    ```
 
-## API 문서 사용 방법
+## How to Use the API Documentation
 
-각 API 페이지는 다음 구조로 구성되어 있습니다:
+Each API page is structured as follows:
 
-- **개요**: 해당 API 모듈에 대한 간략한 설명
-- **주요 클래스 및 인터페이스**: 관련 타입 정의
-- **메서드**: 사용 가능한 메서드 및 매개변수 설명
-- **예제**: 일반적인 사용 사례와 코드 예제
+- **Overview**: A brief description of the API module
+- **Main Classes and Interfaces**: Related type definitions
+- **Methods**: Available methods and parameter descriptions
+- **Examples**: Common use cases and code examples
 
-## 주요 API 모듈
+## Main API Modules
 
-다음 페이지에서 각 API 모듈에 대한 자세한 내용을 확인할 수 있습니다:
+You can find detailed information about each API module on the following pages:
 
-- [기본 기능](./core.md): 로그인, 세션 관리, 시스템 정보 등
-- [객체 관리](./object-management.md): ABAP 객체 관리 기능
-- [개발 기능](./development.md): 코드 개발 관련 기능
-- [트랜스포트](./transport.md): 트랜스포트 관리
-- [ABAP Git](./git.md): ABAP Git 통합
-- [디버깅](./debugging.md): ABAP 디버깅 기능
-- [테스트](./testing.md): 단위 테스트 관련 기능
-- [고급 기능](./advanced.md): 기타 고급 기능
+- [Basic Features](./core.md): Login, session management, system information, etc.
+- [Object Management](./object-management.md): ABAP object management functionality
+- [Development Features](./development.md): Code development related features
+- [Transport](./transport.md): Transport management
+- [ABAP Git](./git.md): ABAP Git integration
+- [Debugging](./debugging.md): ABAP debugging features
+- [Testing](./testing.md): Unit testing related functionality
+- [Advanced Features](./advanced.md): Other advanced features
 
-## API 참조 표
+## API Reference Table
 
-| API 모듈 | 주요 기능 | 관련 클래스/인터페이스 |
+| API Module | Main Features | Related Classes/Interfaces |
 |----------|----------|------------------------|
-| 기본 기능 | 로그인, 세션 관리, 시스템 정보 | `ADTClient`, `AdtHTTP` |
-| 객체 관리 | 객체 탐색, 생성, 수정, 삭제 | `ObjectStructure`, `NodeStructure` |
-| 개발 기능 | 코드 편집, 구문 검사, 리팩토링 | `SyntaxCheckResult`, `CompletionProposal` |
-| 트랜스포트 | 트랜스포트 요청 관리 | `TransportInfo`, `TransportsOfUser` |
-| ABAP Git | Git 저장소 관리 | `GitRepo`, `GitStaging` |
-| 디버깅 | 프로그램 디버깅 | `DebugAttach`, `DebugStackInfo` |
-| 테스트 | 단위 테스트 실행 | `UnitTestClass`, `UnitTestMethod` |
-| 고급 기능 | ATC, 추적 등 | `AtcWorkList`, `TraceResults` |
+| Basic Features | Login, session management, system information | `ADTClient`, `AdtHTTP` |
+| Object Management | Object exploration, creation, modification, deletion | `ObjectStructure`, `NodeStructure` |
+| Development Features | Code editing, syntax checking, refactoring | `SyntaxCheckResult`, `CompletionProposal` |
+| Transport | Transport request management | `TransportInfo`, `TransportsOfUser` |
+| ABAP Git | Git repository management | `GitRepo`, `GitStaging` |
+| Debugging | Program debugging | `DebugAttach`, `DebugStackInfo` |
+| Testing | Unit test execution | `UnitTestClass`, `UnitTestMethod` |
+| Advanced Features | ATC, tracing, etc. | `AtcWorkList`, `TraceResults` |

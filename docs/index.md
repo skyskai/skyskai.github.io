@@ -2,14 +2,14 @@
 layout: home
 hero:
   name: ABAP ADT API
-  text: SAP ABAP 개발 도구 API 라이브러리
-  tagline: SAP ABAP 개발을 위한 JavaScript/TypeScript 라이브러리
+  text: SAP ABAP Development Tools API Library
+  tagline: JavaScript/TypeScript library for SAP ABAP development
   actions:
     - theme: brand
-      text: 시작하기
+      text: Get Started
       link: /getting-started
     - theme: alt
-      text: API 문서
+      text: API Documentation
       link: /api/
     - theme: alt
       text: GitHub
@@ -17,52 +17,52 @@ hero:
 
 features:
   - icon: 🔄
-    title: SAP ABAP과 통합
-    details: SAP NetWeaver ABAP 개발 도구(ADT)와 통합된 API를 제공합니다.
+    title: Integration with SAP ABAP
+    details: Provides API integration with SAP NetWeaver ABAP Development Tools (ADT).
   - icon: 💻
-    title: 프로그래밍 친화적
-    details: JavaScript/TypeScript에서 사용하기 쉬운 API 인터페이스를 제공합니다.
+    title: Developer-Friendly
+    details: Offers an easy-to-use API interface for JavaScript/TypeScript.
   - icon: 🚀
-    title: 강력한 기능
-    details: ABAP 객체 관리, 코드 개발, 디버깅, 테스트 등 다양한 기능을 지원합니다.
+    title: Powerful Features
+    details: Supports various functions including ABAP object management, code development, debugging, testing, and more.
 ---
 
-# ABAP ADT API 라이브러리
+# ABAP ADT API Library
 
-ABAP ADT API는 SAP의 ABAP Development Tools(ADT) REST API를 JavaScript/TypeScript에서 사용할 수 있게 해주는 라이브러리입니다. 이 라이브러리를 통해 ABAP 개발 환경과 상호작용하는 애플리케이션을 쉽게 개발할 수 있습니다.
+ABAP ADT API is a library that allows you to use SAP's ABAP Development Tools (ADT) REST API in JavaScript/TypeScript. With this library, you can easily develop applications that interact with the ABAP development environment.
 
-## 주요 기능
+## Key Features
 
-- ABAP 시스템 로그인 및 세션 관리
-- ABAP 객체 탐색 및 관리
-- 소스 코드 조회 및 수정
-- 구문 검사 및 활성화
-- 트랜스포트 관리
-- ABAP Git 통합
-- 디버깅
-- 단위 테스트
-- 그 외 다양한 ADT 기능
+- ABAP system login and session management
+- ABAP object exploration and management
+- Source code retrieval and modification
+- Syntax checking and activation
+- Transport management
+- ABAP Git integration
+- Debugging
+- Unit testing
+- Various other ADT features
 
-## 설치
+## Installation
 
 ```bash
 npm install abap-adt-api
 ```
 
-## 간단한 사용 예제
+## Simple Usage Example
 
 ```typescript
 import { ADTClient } from 'abap-adt-api';
 
 async function main() {
-  // 클라이언트 생성 및 로그인
+  // Create client and login
   const client = new ADTClient('https://your-sap-server.com', 'username', 'password');
   await client.login();
   
-  // ABAP 객체 정보 조회
+  // Retrieve ABAP object information
   const objectStructure = await client.objectStructure('/sap/bc/adt/programs/programs/Z_YOUR_PROGRAM');
   
-  // 소스 코드 조회
+  // Get source code
   const sourceUrl = ADTClient.mainInclude(objectStructure);
   const source = await client.getObjectSource(sourceUrl);
   
@@ -72,4 +72,4 @@ async function main() {
 main().catch(console.error);
 ```
 
-자세한 내용은 [시작하기](/getting-started) 가이드를 참고하세요.
+For more details, please refer to the [Getting Started](/getting-started) guide.

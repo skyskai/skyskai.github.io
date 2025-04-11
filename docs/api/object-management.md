@@ -1,10 +1,10 @@
-# 객체 관리
+# Object Management
 
-이 페이지에서는 ABAP ADT API를 사용하여 ABAP 객체를 탐색하고 관리하는 방법을 설명합니다.
+This page explains how to explore and manage ABAP objects using the ABAP ADT API.
 
-## 객체 탐색
+## Object Navigation
 
-### 노드 내용 조회
+### Retrieve Node Contents
 
 ```typescript
 async nodeContents(
@@ -17,34 +17,34 @@ async nodeContents(
 ): Promise<NodeStructure>
 ```
 
-ABAP Repository의 노드 구조를 조회합니다. 패키지, 프로그램, 펑션션 그룹 등의 내용을 탐색할 수 있습니다.
+Retrieves the node structure of an ABAP Repository. You can explore the contents of packages, programs, function groups, etc.
 
-**매개변수:**
-- `parent_type`: 부모 노드 유형 ('DEVC/K' (패키지), 'PROG/P' (프로그램), 'FUGR/F' (펑션 그룹), 'PROG/PI' (Include 프로그램))
-- `parent_name`: 부모 노드 이름 (선택사항)
-- `user_name`: 사용자 이름 (선택사항)
-- `parent_tech_name`: 부모 노드 기술 이름 (선택사항)
-- `rebuild_tree`: 트리 재구성 여부 (선택사항)
-- `parentnodes`: 부모 노드 ID 배열 (선택사항)
+**Parameters:**
+- `parent_type`: Parent node type ('DEVC/K' (package), 'PROG/P' (program), 'FUGR/F' (function group), 'PROG/PI' (Include program))
+- `parent_name`: Parent node name (optional)
+- `user_name`: User name (optional)
+- `parent_tech_name`: Parent node technical name (optional)
+- `rebuild_tree`: Whether to rebuild the tree (optional)
+- `parentnodes`: Array of parent node IDs (optional)
 
-**반환 값:**
-- `NodeStructure`: 노드 구조 정보
+**Return value:**
+- `NodeStructure`: Node structure information
 
-**예제:**
+**Example:**
 ```typescript
-// 패키지 내용 조회
+// Retrieve package contents
 const packageContents = await client.nodeContents('DEVC/K', 'ZEXAMPLE_PKG');
 
-// 노드 출력
+// Output nodes
 packageContents.nodes.forEach(node => {
   console.log(`${node.OBJECT_TYPE}: ${node.OBJECT_NAME}`);
 });
 
-// 펑션 그룹 내용 조회
+// Retrieve function group contents
 const functionGroupContents = await client.nodeContents('FUGR/F', 'ZEXAMPLE_FUGR');
 ```
 
-### 객체 검색
+### Search for Objects
 
 ```typescript
 async searchObject(
@@ -54,55 +54,55 @@ async searchObject(
 ): Promise<SearchResult[]>
 ```
 
-패턴으로 ABAP 객체를 검색합니다.
+Searches for ABAP objects using a pattern.
 
-**매개변수:**
-- `query`: 검색 쿼리 (대소문자 구분 가능, 와일드카드 추가되지 않음)
-- `objType`: 객체 유형 필터 (선택적)
-- `max`: 최대 결과 수 (기본값: 100)
+**Parameters:**
+- `query`: Search query (can be case-sensitive, wildcards not added)
+- `objType`: Object type filter (optional)
+- `max`: Maximum number of results (default: 100)
 
-**반환 값:**
-- `SearchResult[]`: 검색 결과 배열
+**Return value:**
+- `SearchResult[]`: Array of search results
 
-**예제:**
+**Example:**
 ```typescript
-// 클래스 검색
+// Search for classes
 const classes = await client.searchObject('ZCL_', 'CLAS');
 
-// 모든 객체 유형 검색
+// Search for all object types
 const allObjects = await client.searchObject('ZEXAMPLE');
 
-// 패키지 검색
+// Search for packages
 const packages = await client.searchObject('Z*', 'DEVC');
 ```
 
-### 객체 경로 찾기
+### Find Object Path
 
 ```typescript
 async findObjectPath(objectUrl: string): Promise<PathStep[]>
 ```
 
-객체의 계층 구조 경로를 찾습니다.
+Finds the hierarchical path of an object.
 
-**매개변수:**
-- `objectUrl`: 객체 URL
+**Parameters:**
+- `objectUrl`: Object URL
 
-**반환 값:**
-- `PathStep[]`: 경로 단계 배열
+**Return value:**
+- `PathStep[]`: Array of path steps
 
-**예제:**
+**Example:**
 ```typescript
 const path = await client.findObjectPath('/sap/bc/adt/programs/programs/ZEXAMPLE');
 
-// 경로 출력
+// Output path
 path.forEach(step => {
   console.log(`${step['adtcore:type']}: ${step['adtcore:name']}`);
 });
 ```
 
-## 객체 구조 조회
+## Object Structure Retrieval
 
-### 객체 구조 조회
+### Retrieve Object Structure
 
 ```typescript
 async objectStructure(
@@ -111,28 +111,28 @@ async objectStructure(
 ): Promise<AbapObjectStructure>
 ```
 
-ABAP 객체의 구조를 조회합니다.
+Retrieves the structure of an ABAP object.
 
-**매개변수:**
-- `objectUrl`: 객체 URL
-- `version`: 객체 버전 ('active', 'inactive', 'workingArea' 중 하나, 선택적)
+**Parameters:**
+- `objectUrl`: Object URL
+- `version`: Object version (one of 'active', 'inactive', 'workingArea', optional)
 
-**반환 값:**
-- `AbapObjectStructure`: 객체 구조 정보
+**Return value:**
+- `AbapObjectStructure`: Object structure information
 
-**예제:**
+**Example:**
 ```typescript
-// 프로그램 구조 조회
+// Retrieve program structure
 const programStructure = await client.objectStructure('/sap/bc/adt/programs/programs/ZEXAMPLE');
 
-// 클래스 구조 조회
+// Retrieve class structure
 const classStructure = await client.objectStructure('/sap/bc/adt/oo/classes/ZCL_EXAMPLE');
 
-// 비활성 버전 조회
+// Retrieve inactive version
 const inactiveStructure = await client.objectStructure('/sap/bc/adt/programs/programs/ZEXAMPLE', 'inactive');
 ```
 
-### 메인 Include 조회
+### Get Main Include
 
 ```typescript
 static mainInclude(
@@ -141,58 +141,58 @@ static mainInclude(
 ): string
 ```
 
-객체의 메인 Include URL을 가져옵니다.
+Gets the main include URL of an object.
 
-**매개변수:**
-- `object`: 객체 구조
-- `withDefault`: 기본값 포함 여부 (기본값: true)
+**Parameters:**
+- `object`: Object structure
+- `withDefault`: Whether to include default value (default: true)
 
-**반환 값:**
-- 메인 Include URL
+**Return value:**
+- Main include URL
 
-**예제:**
+**Example:**
 ```typescript
 const objectStructure = await client.objectStructure('/sap/bc/adt/oo/classes/ZCL_EXAMPLE');
 const mainIncludeUrl = ADTClient.mainInclude(objectStructure);
 ```
 
-### 클래스 Include 조회
+### Get Class Includes
 
 ```typescript
 static classIncludes(clas: AbapClassStructure): Map<classIncludes, string>
 ```
 
-클래스의 모든 Include URL을 가져옵니다.
+Gets all include URLs of a class.
 
-**매개변수:**
-- `clas`: 클래스 구조
+**Parameters:**
+- `clas`: Class structure
 
-**반환 값:**
-- Include 유형과 URL의 맵
+**Return value:**
+- Map of include types and URLs
 
-**예제:**
+**Example:**
 ```typescript
 const classStructure = await client.objectStructure('/sap/bc/adt/oo/classes/ZCL_EXAMPLE');
 if (client.isClassStructure(classStructure)) {
   const includes = ADTClient.classIncludes(classStructure);
   
-  // 메인 Include URL
-  console.log('메인:', includes.get('main'));
+  // Main include URL
+  console.log('Main:', includes.get('main'));
   
-  // Definition Include URL
-  console.log('정의:', includes.get('definitions'));
+  // Definition include URL
+  console.log('Definitions:', includes.get('definitions'));
   
-  // Implementation Include URL
-  console.log('구현:', includes.get('implementations'));
+  // Implementation include URL
+  console.log('Implementations:', includes.get('implementations'));
   
-  // 테스트 클래스 Include URL (있는 경우)
-  console.log('테스트 클래스:', includes.get('testclasses'));
+  // Test class include URL (if exists)
+  console.log('Test classes:', includes.get('testclasses'));
 }
 ```
 
-## 소스 코드 관리
+## Source Code Management
 
-### 소스 코드 조회
+### Retrieve Source Code
 
 ```typescript
 async getObjectSource(
@@ -201,35 +201,35 @@ async getObjectSource(
 ): Promise<string>
 ```
 
-객체의 소스 코드를 조회합니다.
+Retrieves the source code of an object.
 
-**매개변수:**
-- `objectSourceUrl`: 소스 코드 URL
-- `options`: 조회 옵션 (선택적)
-  - `version`: 객체 버전 ('active', 'inactive', 'workingArea' 중 하나)
-  - `gitUser`: Git 사용자 이름 (ABAP Git 객체만 해당)
-  - `gitPassword`: Git 비밀번호 (ABAP Git 객체만 해당)
+**Parameters:**
+- `objectSourceUrl`: Source code URL
+- `options`: Retrieval options (optional)
+  - `version`: Object version (one of 'active', 'inactive', 'workingArea')
+  - `gitUser`: Git username (only for ABAP Git objects)
+  - `gitPassword`: Git password (only for ABAP Git objects)
 
-**반환 값:**
-- 소스 코드 텍스트
+**Return value:**
+- Source code text
 
-**예제:**
+**Example:**
 ```typescript
-// 객체 구조 조회
+// Retrieve object structure
 const objectStructure = await client.objectStructure('/sap/bc/adt/programs/programs/ZEXAMPLE');
 
-// 메인 포함 URL 얻기
+// Get main include URL
 const sourceUrl = ADTClient.mainInclude(objectStructure);
 
-// 소스 코드 조회
+// Retrieve source code
 const source = await client.getObjectSource(sourceUrl);
 console.log(source);
 
-// 비활성 버전 조회
+// Retrieve inactive version
 const inactiveSource = await client.getObjectSource(sourceUrl, { version: 'inactive' });
 ```
 
-### 소스 코드 수정
+### Modify Source Code
 
 ```typescript
 async setObjectSource(
@@ -240,37 +240,37 @@ async setObjectSource(
 ): Promise<void>
 ```
 
-객체의 소스 코드를 수정합니다.
+Modifies the source code of an object.
 
-**매개변수:**
-- `objectSourceUrl`: 소스 코드 URL
-- `source`: 새 소스 코드
-- `lockHandle`: 잠금 핸들 (객체 잠금으로 얻음)
-- `transport`: 트랜스포트 번호 (선택적)
+**Parameters:**
+- `objectSourceUrl`: Source code URL
+- `source`: New source code
+- `lockHandle`: Lock handle (obtained from object lock)
+- `transport`: Transport number (optional)
 
-**예제:**
+**Example:**
 ```typescript
-// 객체 구조 조회
+// Retrieve object structure
 const objectStructure = await client.objectStructure('/sap/bc/adt/programs/programs/ZEXAMPLE');
 const sourceUrl = ADTClient.mainInclude(objectStructure);
 
-// 현재 소스 조회
+// Retrieve current source
 const currentSource = await client.getObjectSource(sourceUrl);
 
-// 객체 잠금
+// Lock object
 const lock = await client.lock(objectStructure.objectUrl);
 
-// 소스 코드 수정
-const newSource = currentSource + '\n* 주석 추가됨';
+// Modify source code
+const newSource = currentSource + '\n* Comment added';
 await client.setObjectSource(sourceUrl, newSource, lock.LOCK_HANDLE);
 
-// 객체 잠금 해제
+// Release object lock
 await client.unLock(objectStructure.objectUrl, lock.LOCK_HANDLE);
 ```
 
-## 객체 잠금 관리
+## Object Lock Management
 
-### 객체 잠금
+### Lock Object
 
 ```typescript
 async lock(
@@ -279,23 +279,23 @@ async lock(
 ): Promise<AdtLock>
 ```
 
-객체를 잠급니다.
+Locks an object.
 
-**매개변수:**
-- `objectUrl`: 객체 URL
-- `accessMode`: 접근 모드 (기본값: "MODIFY")
+**Parameters:**
+- `objectUrl`: Object URL
+- `accessMode`: Access mode (default: "MODIFY")
 
-**반환 값:**
-- `AdtLock`: 잠금 정보
+**Return value:**
+- `AdtLock`: Lock information
 
-**예제:**
+**Example:**
 ```typescript
-// 객체 잠금
+// Lock object
 const lock = await client.lock('/sap/bc/adt/programs/programs/ZEXAMPLE');
-console.log('잠금 핸들:', lock.LOCK_HANDLE);
+console.log('Lock handle:', lock.LOCK_HANDLE);
 ```
 
-### 객체 잠금 해제
+### Release Object Lock
 
 ```typescript
 async unLock(
@@ -304,21 +304,21 @@ async unLock(
 ): Promise<void>
 ```
 
-객체 잠금을 해제합니다.
+Releases an object lock.
 
-**매개변수:**
-- `objectUrl`: 객체 URL
-- `lockHandle`: 잠금 핸들
+**Parameters:**
+- `objectUrl`: Object URL
+- `lockHandle`: Lock handle
 
-**예제:**
+**Example:**
 ```typescript
-// 객체 잠금 해제
+// Release object lock
 await client.unLock('/sap/bc/adt/programs/programs/ZEXAMPLE', lockHandle);
 ```
 
-## 객체 활성화
+## Object Activation
 
-### 객체 활성화
+### Activate Object
 
 ```typescript
 async activate(
@@ -334,49 +334,49 @@ async activate(
 ): Promise<ActivationResult>
 ```
 
-객체를 활성화합니다.
+Activates an object.
 
-**매개변수:**
-- `object` / `objectName`: 활성화할 객체 또는 객체 이름
-- `objectUrl`: 객체 URL
-- `mainInclude`: 메인 포함 (선택적)
-- `preauditRequested`: 사전 감사 요청 여부 (선택적)
+**Parameters:**
+- `object` / `objectName`: Object to activate or object name
+- `objectUrl`: Object URL
+- `mainInclude`: Main include (optional)
+- `preauditRequested`: Whether pre-audit is requested (optional)
 
-**반환 값:**
-- `ActivationResult`: 활성화 결과
+**Return value:**
+- `ActivationResult`: Activation result
 
-**예제:**
+**Example:**
 ```typescript
-// 객체 이름과 URL로 활성화
+// Activate using object name and URL
 const result = await client.activate('ZEXAMPLE', '/sap/bc/adt/programs/programs/ZEXAMPLE');
 
 if (result.success) {
-  console.log('활성화 성공');
+  console.log('Activation successful');
 } else {
-  console.log('활성화 실패:', result.messages);
+  console.log('Activation failed:', result.messages);
   
-  // 비활성 객체 목록
-  console.log('비활성 객체:', result.inactive);
+  // List of inactive objects
+  console.log('Inactive objects:', result.inactive);
 }
 ```
 
-### 비활성 객체 조회
+### Retrieve Inactive Objects
 
 ```typescript
 async inactiveObjects(): Promise<InactiveObjectRecord[]>
 ```
 
-시스템의 모든 비활성 객체를 조회합니다.
+Retrieves all inactive objects in the system.
 
-**반환 값:**
-- `InactiveObjectRecord[]`: 비활성 객체 목록
+**Return value:**
+- `InactiveObjectRecord[]`: List of inactive objects
 
-**예제:**
+**Example:**
 ```typescript
 const inactive = await client.inactiveObjects();
-console.log(`비활성 객체 수: ${inactive.length}`);
+console.log(`Number of inactive objects: ${inactive.length}`);
 
-// 비활성 객체 정보 출력
+// Output inactive object information
 inactive.forEach(record => {
   if (record.object) {
     console.log(`${record.object["adtcore:type"]}: ${record.object["adtcore:name"]}`);
@@ -384,9 +384,9 @@ inactive.forEach(record => {
 });
 ```
 
-## 객체 생성 및 삭제
+## Object Creation and Deletion
 
-### 객체 생성
+### Create Object
 
 ```typescript
 async createObject(
@@ -402,42 +402,42 @@ async createObject(
 async createObject(options: NewObjectOptions): Promise<void>
 ```
 
-새 ABAP 객체를 생성합니다.
+Creates a new ABAP object.
 
-**매개변수 (첫 번째 형식):**
-- `objtype`: 객체 유형 (PROG/P, CLAS/OC 등)
-- `name`: 객체 이름
-- `parentName`: 부모 이름 (패키지 등)
-- `description`: 객체 설명
-- `parentPath`: 부모 경로
-- `responsible`: 담당자 (선택적)
-- `transport`: 트랜스포트 번호 (선택적)
+**Parameters (first form):**
+- `objtype`: Object type (PROG/P, CLAS/OC, etc.)
+- `name`: Object name
+- `parentName`: Parent name (package, etc.)
+- `description`: Object description
+- `parentPath`: Parent path
+- `responsible`: Person responsible (optional)
+- `transport`: Transport number (optional)
 
-**매개변수 (두 번째 형식):**
-- `options`: 객체 생성 옵션
+**Parameters (second form):**
+- `options`: Object creation options
 
-**예제:**
+**Example:**
 ```typescript
-// 새 프로그램 생성
+// Create a new program
 await client.createObject(
-  'PROG/P',              // 객체 유형: 프로그램
-  'ZEXAMPLE_PROGRAM',    // 이름
-  'ZEXAMPLE_PKG',        // 패키지
-  '예제 프로그램',         // 설명
-  '/sap/bc/adt/packages/ZEXAMPLE_PKG', // 패키지 경로
-  'DEVELOPER',           // 담당자
-  'DEVK900000'           // 트랜스포트
+  'PROG/P',              // Object type: Program
+  'ZEXAMPLE_PROGRAM',    // Name
+  'ZEXAMPLE_PKG',        // Package
+  'Example Program',     // Description
+  '/sap/bc/adt/packages/ZEXAMPLE_PKG', // Package path
+  'DEVELOPER',           // Responsible
+  'DEVK900000'           // Transport
 );
 
-// 테스트 포함 생성
+// Create test include
 await client.createTestInclude(
-  'ZCL_EXAMPLE_CLASS',   // 클래스 이름
-  lockHandle,            // 잠금 핸들
-  'DEVK900000'           // 트랜스포트
+  'ZCL_EXAMPLE_CLASS',   // Class name
+  lockHandle,            // Lock handle
+  'DEVK900000'           // Transport
 );
 ```
 
-### 객체 삭제
+### Delete Object
 
 ```typescript
 async deleteObject(
@@ -447,25 +447,25 @@ async deleteObject(
 ): Promise<void>
 ```
 
-객체를 삭제합니다.
+Deletes an object.
 
-**매개변수:**
-- `objectUrl`: 객체 URL
-- `lockHandle`: 잠금 핸들
-- `transport`: 트랜스포트 번호 (선택적)
+**Parameters:**
+- `objectUrl`: Object URL
+- `lockHandle`: Lock handle
+- `transport`: Transport number (optional)
 
-**예제:**
+**Example:**
 ```typescript
-// 객체 잠금
+// Lock object
 const lock = await client.lock('/sap/bc/adt/programs/programs/ZEXAMPLE');
 
-// 객체 삭제
+// Delete object
 await client.deleteObject('/sap/bc/adt/programs/programs/ZEXAMPLE', lock.LOCK_HANDLE, 'DEVK900000');
 ```
 
-## 예제: 객체 관리 워크플로우
+## Example: Object Management Workflow
 
-다음 예제는 객체 관리의 일반적인 워크플로우를 보여줍니다:
+The following example demonstrates a typical workflow for object management:
 
 ```typescript
 import { ADTClient } from 'abap-adt-api';
@@ -475,50 +475,50 @@ async function objectManagementWorkflow() {
   await client.login();
   
   try {
-    // 상태 유지 세션으로 설정 (필수)
+    // Set stateful session (required)
     client.stateful = "stateful";
     
-    // 1. 패키지 내용 조회
+    // 1. Retrieve package contents
     const packageContents = await client.nodeContents('DEVC/K', 'ZEXAMPLE_PKG');
-    console.log(`패키지 내 객체 수: ${packageContents.nodes.length}`);
+    console.log(`Number of objects in package: ${packageContents.nodes.length}`);
     
-    // 2. 프로그램 구조 조회
+    // 2. Retrieve program structure
     const programUrl = '/sap/bc/adt/programs/programs/ZEXAMPLE';
     const programStructure = await client.objectStructure(programUrl);
     
-    // 3. 소스 코드 URL 가져오기
+    // 3. Get source code URL
     const sourceUrl = ADTClient.mainInclude(programStructure);
     
-    // 4. 현재 소스 코드 조회
+    // 4. Retrieve current source code
     const currentSource = await client.getObjectSource(sourceUrl);
-    console.log('현재 소스 코드 길이:', currentSource.length);
+    console.log('Current source code length:', currentSource.length);
     
-    // 5. 객체 잠금
+    // 5. Lock object
     const lock = await client.lock(programUrl);
-    console.log('잠금 핸들:', lock.LOCK_HANDLE);
+    console.log('Lock handle:', lock.LOCK_HANDLE);
     
-    // 6. 소스 코드 수정
-    const newSource = currentSource + '\n* 수정됨: ' + new Date().toISOString();
+    // 6. Modify source code
+    const newSource = currentSource + '\n* Modified: ' + new Date().toISOString();
     await client.setObjectSource(sourceUrl, newSource, lock.LOCK_HANDLE);
-    console.log('소스 코드 수정됨');
+    console.log('Source code modified');
     
-    // 7. 활성화
+    // 7. Activate
     const activationResult = await client.activate(
       programStructure.metaData['adtcore:name'],
       programUrl
     );
     
     if (activationResult.success) {
-      console.log('활성화 성공');
+      console.log('Activation successful');
     } else {
-      console.log('활성화 실패:', activationResult.messages);
+      console.log('Activation failed:', activationResult.messages);
     }
     
-    // 8. 객체 잠금 해제
+    // 8. Release object lock
     await client.unLock(programUrl, lock.LOCK_HANDLE);
-    console.log('잠금 해제됨');
+    console.log('Lock released');
   } catch (error) {
-    console.error('오류 발생:', error);
+    console.error('Error occurred:', error);
   } finally {
     await client.logout();
   }
@@ -527,9 +527,9 @@ async function objectManagementWorkflow() {
 objectManagementWorkflow();
 ```
 
-## 참고 사항
+## Notes
 
-- 객체를 수정하거나 삭제하려면 항상 상태 유지 세션(`client.stateful = "stateful"`)이 필요합니다.
-- 객체를 수정하기 전에 항상 잠금을 획득하고, 작업 후에는 잠금을 해제해야 합니다.
-- 활성화에 실패하면 비활성 객체 목록을 확인하고 필요한 경우 수정하세요.
-- 패키지에 종속된 객체를 관리할 때는 트랜스포트가 필요합니다.
+- A stateful session (`client.stateful = "stateful"`) is always required to modify or delete objects.
+- Always acquire a lock before modifying an object, and release the lock after completing your work.
+- If activation fails, check the list of inactive objects and make necessary corrections.
+- A transport is required when managing objects that are dependent on a package.

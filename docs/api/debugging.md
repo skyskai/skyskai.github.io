@@ -1,20 +1,20 @@
-# 디버깅 기능
+# Debugging Features
 
-이 페이지에서는 ABAP ADT API를 사용하여 ABAP 프로그램을 원격으로 디버깅하는 방법을 설명합니다.
+This page explains how to remotely debug ABAP programs using the ABAP ADT API.
 
-## 디버깅 개요
+## Debugging Overview
 
-ABAP ADT API를 통한 원격 디버깅은 ADT(ABAP Development Tools)의 디버깅 기능을 프로그래밍 방식으로 구현합니다. 이를 통해 다음과 같은 작업을 수행할 수 있습니다:
+Remote debugging through the ABAP ADT API implements the debugging functionality of ADT (ABAP Development Tools) programmatically. This allows you to perform the following tasks:
 
-- 디버그 세션 설정 및 리스닝
-- 브레이크포인트 설정 및 관리
-- 디버깅 중인 프로그램의 변수 검사
-- 디버깅 단계 제어(Step Into, Step Over 등)
-- 실행 스택 검사
+- Set up and listen for debug sessions
+- Set and manage breakpoints
+- Inspect variables in the program being debugged
+- Control debugging steps (Step Into, Step Over, etc.)
+- Examine the execution stack
 
-## 디버그 리스너 관리
+## Debug Listener Management
 
-### 디버그 리스너 조회
+### Query Debug Listeners
 
 ```typescript
 async debuggerListeners(
@@ -34,39 +34,39 @@ async debuggerListeners(
 ): Promise<DebugListenerError | undefined>
 ```
 
-현재 활성화된 디버그 리스너를 조회합니다.
+Queries currently active debug listeners.
 
-**매개변수:**
-- `debuggingMode`: 디버깅 모드 ('user' 또는 'terminal')
-- `terminalId`: 터미널 ID
+**Parameters:**
+- `debuggingMode`: Debugging mode ('user' or 'terminal')
+- `terminalId`: Terminal ID
 - `ideId`: IDE ID
-- `user`: 사용자 ID (사용자 모드에서 필수)
-- `checkConflict`: 충돌 확인 여부 (선택적, 기본값: true)
+- `user`: User ID (required in user mode)
+- `checkConflict`: Whether to check for conflicts (optional, default: true)
 
-**반환 값:**
-- `DebugListenerError | undefined`: 충돌 시 오류 정보, 그렇지 않으면 undefined
+**Return value:**
+- `DebugListenerError | undefined`: Error information if there's a conflict, otherwise undefined
 
-**예제:**
+**Example:**
 ```typescript
-// 디버그 리스너 조회
+// Query debug listeners
 const conflict = await client.debuggerListeners(
-  'user',             // 사용자 모드
-  'terminal-id-123',  // 터미널 ID
+  'user',             // User mode
+  'terminal-id-123',  // Terminal ID
   'ide-id-456',       // IDE ID
-  'DEVELOPER',        // 사용자 ID
-  true                // 충돌 확인
+  'DEVELOPER',        // User ID
+  true                // Check for conflicts
 );
 
 if (conflict) {
-  console.log('디버그 리스너 충돌 발생:');
-  console.log(`- 타입: ${conflict.type}`);
-  console.log(`- 메시지: ${conflict.message.text}`);
+  console.log('Debug listener conflict occurred:');
+  console.log(`- Type: ${conflict.type}`);
+  console.log(`- Message: ${conflict.message.text}`);
 } else {
-  console.log('활성화된 디버그 리스너가 없습니다.');
+  console.log('No active debug listeners.');
 }
 ```
 
-### 디버그 리스너 시작
+### Start Debug Listener
 
 ```typescript
 async debuggerListen(
@@ -88,52 +88,52 @@ async debuggerListen(
 ): Promise<DebugListenerError | Debuggee | undefined>
 ```
 
-디버그 리스너를 시작하고 디버그 이벤트를 기다립니다.
+Starts a debug listener and waits for debug events.
 
-**매개변수:**
-- `debuggingMode`: 디버깅 모드 ('user' 또는 'terminal')
-- `terminalId`: 터미널 ID
+**Parameters:**
+- `debuggingMode`: Debugging mode ('user' or 'terminal')
+- `terminalId`: Terminal ID
 - `ideId`: IDE ID
-- `user`: 사용자 ID (사용자 모드에서 필수)
-- `checkConflict`: 충돌 확인 여부 (선택적, 기본값: true)
-- `isNotifiedOnConflict`: 충돌 시 알림 여부 (선택적, 기본값: true)
+- `user`: User ID (required in user mode)
+- `checkConflict`: Whether to check for conflicts (optional, default: true)
+- `isNotifiedOnConflict`: Whether to notify on conflicts (optional, default: true)
 
-**반환 값:**
-- `DebugListenerError | Debuggee | undefined`: 충돌 시 오류 정보, 디버그 이벤트 발생 시 디버기 정보, 타임아웃 시 undefined
+**Return value:**
+- `DebugListenerError | Debuggee | undefined`: Error information if there's a conflict, debuggee information if a debug event occurs, undefined if it times out
 
-**중요:** 이 메서드는 디버그 이벤트가 발생하거나 타임아웃될 때까지 차단됩니다.
+**Important:** This method blocks until a debug event occurs or it times out.
 
-**예제:**
+**Example:**
 ```typescript
-// 디버그 리스너 시작
-console.log('디버그 리스너 시작 중...');
+// Start debug listener
+console.log('Starting debug listener...');
 const result = await client.debuggerListen(
-  'user',             // 사용자 모드
-  'terminal-id-123',  // 터미널 ID
+  'user',             // User mode
+  'terminal-id-123',  // Terminal ID
   'ide-id-456',       // IDE ID
-  'DEVELOPER',        // 사용자 ID
-  true,               // 충돌 확인
-  true                // 충돌 시 알림
+  'DEVELOPER',        // User ID
+  true,               // Check for conflicts
+  true                // Notify on conflicts
 );
 
 if (!result) {
-  console.log('디버그 리스너가 타임아웃되었습니다.');
+  console.log('Debug listener timed out.');
 } else if ('type' in result) {
   // DebugListenerError
-  console.log('디버그 리스너 충돌 발생:');
-  console.log(`- 타입: ${result.type}`);
-  console.log(`- 메시지: ${result.message.text}`);
+  console.log('Debug listener conflict occurred:');
+  console.log(`- Type: ${result.type}`);
+  console.log(`- Message: ${result.message.text}`);
 } else {
   // Debuggee
-  console.log('디버그 이벤트 발생:');
-  console.log(`- 프로그램: ${result.PRG_CURR}`);
-  console.log(`- 포함: ${result.INCL_CURR}`);
-  console.log(`- 라인: ${result.LINE_CURR}`);
-  console.log(`- 사용자: ${result.DEBUGGEE_USER}`);
+  console.log('Debug event occurred:');
+  console.log(`- Program: ${result.PRG_CURR}`);
+  console.log(`- Include: ${result.INCL_CURR}`);
+  console.log(`- Line: ${result.LINE_CURR}`);
+  console.log(`- User: ${result.DEBUGGEE_USER}`);
 }
 ```
 
-### 디버그 리스너 중지
+### Stop Debug Listener
 
 ```typescript
 async debuggerDeleteListener(
@@ -151,29 +151,29 @@ async debuggerDeleteListener(
 ): Promise<void>
 ```
 
-활성화된 디버그 리스너를 중지합니다.
+Stops an active debug listener.
 
-**매개변수:**
-- `debuggingMode`: 디버깅 모드 ('user' 또는 'terminal')
-- `terminalId`: 터미널 ID
+**Parameters:**
+- `debuggingMode`: Debugging mode ('user' or 'terminal')
+- `terminalId`: Terminal ID
 - `ideId`: IDE ID
-- `user`: 사용자 ID (사용자 모드에서 필수)
+- `user`: User ID (required in user mode)
 
-**예제:**
+**Example:**
 ```typescript
-// 디버그 리스너 중지
+// Stop debug listener
 await client.debuggerDeleteListener(
-  'user',             // 사용자 모드
-  'terminal-id-123',  // 터미널 ID
+  'user',             // User mode
+  'terminal-id-123',  // Terminal ID
   'ide-id-456',       // IDE ID
-  'DEVELOPER'         // 사용자 ID
+  'DEVELOPER'         // User ID
 );
-console.log('디버그 리스너가 중지되었습니다.');
+console.log('Debug listener has been stopped.');
 ```
 
-## 브레이크포인트 관리
+## Breakpoint Management
 
-### 브레이크포인트 설정
+### Set Breakpoints
 
 ```typescript
 async debuggerSetBreakpoints(
@@ -203,36 +203,36 @@ async debuggerSetBreakpoints(
 ): Promise<(DebugBreakpoint | DebugBreakpointError)[]>
 ```
 
-디버깅을 위한 브레이크포인트를 설정합니다.
+Sets breakpoints for debugging.
 
-**매개변수:**
-- `debuggingMode`: 디버깅 모드 ('user' 또는 'terminal')
-- `terminalId`: 터미널 ID
+**Parameters:**
+- `debuggingMode`: Debugging mode ('user' or 'terminal')
+- `terminalId`: Terminal ID
 - `ideId`: IDE ID
-- `clientId`: 클라이언트 ID
-- `breakpoints`: 브레이크포인트 배열 (URL 문자열 또는 브레이크포인트 객체)
-- `user`: 사용자 ID (사용자 모드에서 필수)
-- `scope`: 디버거 범위 ('external' 또는 'debugger', 기본값: 'external')
-- `systemDebugging`: 시스템 디버깅 여부 (선택적, 기본값: false)
-- `deactivated`: 비활성화 여부 (선택적, 기본값: false)
-- `syncScopeUri`: 동기화 범위 URI (선택적)
+- `clientId`: Client ID
+- `breakpoints`: Array of breakpoints (URL strings or breakpoint objects)
+- `user`: User ID (required in user mode)
+- `scope`: Debugger scope ('external' or 'debugger', default: 'external')
+- `systemDebugging`: Whether to enable system debugging (optional, default: false)
+- `deactivated`: Whether breakpoints are deactivated (optional, default: false)
+- `syncScopeUri`: Synchronization scope URI (optional)
 
-**반환 값:**
-- `(DebugBreakpoint | DebugBreakpointError)[]`: 설정된 브레이크포인트 또는 오류 정보
+**Return value:**
+- `(DebugBreakpoint | DebugBreakpointError)[]`: Set breakpoints or error information
 
-**예제:**
+**Example:**
 ```typescript
-// 브레이크포인트 설정
+// Set breakpoints
 const breakpoints = await client.debuggerSetBreakpoints(
-  'user',             // 사용자 모드
-  'terminal-id-123',  // 터미널 ID
+  'user',             // User mode
+  'terminal-id-123',  // Terminal ID
   'ide-id-456',       // IDE ID
-  'client-id-789',    // 클라이언트 ID
+  'client-id-789',    // Client ID
   [
-    // 단순 URL로 브레이크포인트 설정
+    // Set breakpoint using a simple URL
     '/sap/bc/adt/programs/programs/ZEXAMPLE#start=10,0',
     
-    // 브레이크포인트 객체로 설정
+    // Set using a breakpoint object
     {
       kind: 'line',
       clientId: 'bp-1',
@@ -245,28 +245,28 @@ const breakpoints = await client.debuggerSetBreakpoints(
       }
     }
   ],
-  'DEVELOPER',        // 사용자 ID
-  'external',         // 범위
-  false,              // 시스템 디버깅
-  false,              // 비활성화 여부
-  ''                  // 동기화 범위 URI
+  'DEVELOPER',        // User ID
+  'external',         // Scope
+  false,              // System debugging
+  false,              // Deactivated
+  ''                  // Synchronization scope URI
 );
 
-// 설정된 브레이크포인트 확인
+// Check set breakpoints
 breakpoints.forEach(bp => {
   if ('uri' in bp) {
-    // 성공
-    console.log(`브레이크포인트 설정됨: ${bp.id}`);
+    // Success
+    console.log(`Breakpoint set: ${bp.id}`);
     console.log(`- URI: ${bp.uri.uri}`);
-    console.log(`- 라인: ${bp.uri.range.start.line}`);
+    console.log(`- Line: ${bp.uri.range.start.line}`);
   } else {
-    // 오류
-    console.log(`브레이크포인트 오류: ${bp.errorMessage}`);
+    // Error
+    console.log(`Breakpoint error: ${bp.errorMessage}`);
   }
 });
 ```
 
-### 브레이크포인트 삭제
+### Delete Breakpoints
 
 ```typescript
 async debuggerDeleteBreakpoints(
@@ -288,38 +288,38 @@ async debuggerDeleteBreakpoints(
 ): Promise<void>
 ```
 
-설정된 브레이크포인트를 삭제합니다.
+Deletes a set breakpoint.
 
-**매개변수:**
-- `breakpoint`: 삭제할 브레이크포인트
-- `debuggingMode`: 디버깅 모드 ('user' 또는 'terminal')
-- `terminalId`: 터미널 ID
+**Parameters:**
+- `breakpoint`: Breakpoint to delete
+- `debuggingMode`: Debugging mode ('user' or 'terminal')
+- `terminalId`: Terminal ID
 - `ideId`: IDE ID
-- `requestUser`: 사용자 ID (사용자 모드에서 필수)
-- `scope`: 디버거 범위 ('external' 또는 'debugger', 기본값: 'external')
+- `requestUser`: User ID (required in user mode)
+- `scope`: Debugger scope ('external' or 'debugger', default: 'external')
 
-**예제:**
+**Example:**
 ```typescript
-// 브레이크포인트 설정
+// Set breakpoints
 const breakpoints = await client.debuggerSetBreakpoints(/* ... */);
 
-// 설정된 브레이크포인트 중 첫 번째 삭제
+// Delete the first set breakpoint
 if (breakpoints.length > 0 && 'uri' in breakpoints[0]) {
   await client.debuggerDeleteBreakpoints(
-    breakpoints[0],      // 브레이크포인트
-    'user',              // 사용자 모드
-    'terminal-id-123',   // 터미널 ID
+    breakpoints[0],      // Breakpoint
+    'user',              // User mode
+    'terminal-id-123',   // Terminal ID
     'ide-id-456',        // IDE ID
-    'DEVELOPER',         // 사용자 ID
-    'external'           // 범위
+    'DEVELOPER',         // User ID
+    'external'           // Scope
   );
-  console.log(`브레이크포인트 삭제됨: ${breakpoints[0].id}`);
+  console.log(`Breakpoint deleted: ${breakpoints[0].id}`);
 }
 ```
 
-## 디버그 세션 제어
+## Debug Session Control
 
-### 디버깅 대상 연결
+### Attach to Debuggee
 
 ```typescript
 async debuggerAttach(
@@ -337,40 +337,40 @@ async debuggerAttach(
 ): Promise<DebugAttach>
 ```
 
-디버깅 대상에 연결합니다.
+Attaches to a debuggee.
 
-**매개변수:**
-- `debuggingMode`: 디버깅 모드 ('user' 또는 'terminal')
-- `debuggeeId`: 디버기 ID
-- `user`: 사용자 ID (사용자 모드에서 필수)
-- `dynproDebugging`: 다이내믹 프로그램 디버깅 여부 (선택적, 기본값: false)
+**Parameters:**
+- `debuggingMode`: Debugging mode ('user' or 'terminal')
+- `debuggeeId`: Debuggee ID
+- `user`: User ID (required in user mode)
+- `dynproDebugging`: Whether to enable dynamic program debugging (optional, default: false)
 
-**반환 값:**
-- `DebugAttach`: 디버그 연결 정보
+**Return value:**
+- `DebugAttach`: Debug attachment information
 
-**예제:**
+**Example:**
 ```typescript
-// 디버그 리스너로 디버기 정보 가져오기
+// Get debuggee information via debug listener
 const debuggee = await client.debuggerListen(/* ... */);
 
-// 연결 검증 및 연결
+// Verify and attach
 if (debuggee && !('type' in debuggee)) {
-  // 디버깅 대상에 연결
+  // Attach to debuggee
   const attachInfo = await client.debuggerAttach(
-    'user',             // 사용자 모드
-    debuggee.DEBUGGEE_ID, // 디버기 ID
-    'DEVELOPER',        // 사용자 ID
-    true                // 다이내믹 프로그램 디버깅
+    'user',             // User mode
+    debuggee.DEBUGGEE_ID, // Debuggee ID
+    'DEVELOPER',        // User ID
+    true                // Dynamic program debugging
   );
   
-  console.log('디버깅 대상에 연결됨:');
-  console.log(`- 세션 ID: ${attachInfo.debugSessionId}`);
-  console.log(`- 세션 제목: ${attachInfo.sessionTitle}`);
-  console.log(`- 단계 가능: ${attachInfo.isSteppingPossible}`);
+  console.log('Attached to debuggee:');
+  console.log(`- Session ID: ${attachInfo.debugSessionId}`);
+  console.log(`- Session title: ${attachInfo.sessionTitle}`);
+  console.log(`- Stepping possible: ${attachInfo.isSteppingPossible}`);
   
-  // 도달한 브레이크포인트 확인
+  // Check reached breakpoints
   if (attachInfo.reachedBreakpoints && attachInfo.reachedBreakpoints.length > 0) {
-    console.log('도달한 브레이크포인트:');
+    console.log('Reached breakpoints:');
     attachInfo.reachedBreakpoints.forEach(bp => {
       console.log(`- ID: ${bp.id}`);
     });
@@ -378,7 +378,7 @@ if (debuggee && !('type' in debuggee)) {
 }
 ```
 
-### 디버깅 설정 저장
+### Save Debugger Settings
 
 ```typescript
 async debuggerSaveSettings(
@@ -386,30 +386,30 @@ async debuggerSaveSettings(
 ): Promise<DebugSettings>
 ```
 
-디버거 설정을 저장합니다.
+Saves debugger settings.
 
-**매개변수:**
-- `settings`: 디버거 설정 (부분적)
+**Parameters:**
+- `settings`: Debugger settings (partial)
 
-**반환 값:**
-- `DebugSettings`: 저장된 설정
+**Return value:**
+- `DebugSettings`: Saved settings
 
-**예제:**
+**Example:**
 ```typescript
-// 디버거 설정 저장
+// Save debugger settings
 const settings = await client.debuggerSaveSettings({
-  systemDebugging: true,           // 시스템 디버깅
-  createExceptionObject: true,     // 예외 객체 생성
-  backgroundRFC: false,            // 백그라운드 RFC
-  sharedObjectDebugging: false,    // 공유 객체 디버깅
-  showDataAging: true,             // 데이터 에이징 표시
-  updateDebugging: false           // 업데이트 디버깅
+  systemDebugging: true,           // System debugging
+  createExceptionObject: true,     // Create exception object
+  backgroundRFC: false,            // Background RFC
+  sharedObjectDebugging: false,    // Shared object debugging
+  showDataAging: true,             // Show data aging
+  updateDebugging: false           // Update debugging
 });
 
-console.log('디버거 설정이 저장되었습니다:', settings);
+console.log('Debugger settings saved:', settings);
 ```
 
-### 스택 추적 조회
+### Retrieve Stack Trace
 
 ```typescript
 async debuggerStackTrace(
@@ -417,35 +417,35 @@ async debuggerStackTrace(
 ): Promise<DebugStackInfo>
 ```
 
-현재 디버깅 스택 추적을 조회합니다.
+Retrieves the current debugging stack trace.
 
-**매개변수:**
-- `semanticURIs`: 시맨틱 URI 사용 여부 (기본값: true)
+**Parameters:**
+- `semanticURIs`: Whether to use semantic URIs (default: true)
 
-**반환 값:**
-- `DebugStackInfo`: 스택 추적 정보
+**Return value:**
+- `DebugStackInfo`: Stack trace information
 
-**예제:**
+**Example:**
 ```typescript
-// 스택 추적 조회
+// Retrieve stack trace
 const stackInfo = await client.debuggerStackTrace(true);
 
-console.log('스택 추적:');
+console.log('Stack trace:');
 console.log(`- RFC: ${stackInfo.isRfc}`);
-console.log(`- 동일 시스템: ${stackInfo.isSameSystem}`);
-console.log(`- 서버: ${stackInfo.serverName}`);
+console.log(`- Same system: ${stackInfo.isSameSystem}`);
+console.log(`- Server: ${stackInfo.serverName}`);
 
-// 스택 항목 출력
+// Output stack entries
 stackInfo.stack.forEach((entry, index) => {
-  console.log(`스택 항목 #${index}:`);
-  console.log(`- 프로그램: ${entry.programName}`);
-  console.log(`- 포함: ${entry.includeName}`);
-  console.log(`- 라인: ${entry.line}`);
-  console.log(`- 이벤트: ${entry.eventType} - ${entry.eventName}`);
+  console.log(`Stack entry #${index}:`);
+  console.log(`- Program: ${entry.programName}`);
+  console.log(`- Include: ${entry.includeName}`);
+  console.log(`- Line: ${entry.line}`);
+  console.log(`- Event: ${entry.eventType} - ${entry.eventName}`);
 });
 ```
 
-### 변수 값 조회
+### Retrieve Variable Values
 
 ```typescript
 async debuggerVariables(
@@ -453,28 +453,28 @@ async debuggerVariables(
 ): Promise<DebugVariable[]>
 ```
 
-디버그 변수 값을 조회합니다.
+Retrieves debug variable values.
 
-**매개변수:**
-- `parents`: 부모 변수 ID 배열
+**Parameters:**
+- `parents`: Array of parent variable IDs
 
-**반환 값:**
-- `DebugVariable[]`: 변수 정보 배열
+**Return value:**
+- `DebugVariable[]`: Array of variable information
 
-**예제:**
+**Example:**
 ```typescript
-// 루트 변수 값 조회
+// Retrieve root variable values
 const variables = await client.debuggerVariables(['@ROOT']);
 
-console.log('변수:');
+console.log('Variables:');
 variables.forEach(variable => {
-  console.log(`- ${variable.NAME}: ${variable.VALUE} (유형: ${variable.META_TYPE})`);
-  console.log(`  선언 유형: ${variable.DECLARED_TYPE_NAME}`);
-  console.log(`  실제 유형: ${variable.ACTUAL_TYPE_NAME}`);
+  console.log(`- ${variable.NAME}: ${variable.VALUE} (Type: ${variable.META_TYPE})`);
+  console.log(`  Declared type: ${variable.DECLARED_TYPE_NAME}`);
+  console.log(`  Actual type: ${variable.ACTUAL_TYPE_NAME}`);
 });
 ```
 
-### 자식 변수 조회
+### Retrieve Child Variables
 
 ```typescript
 async debuggerChildVariables(
@@ -482,31 +482,31 @@ async debuggerChildVariables(
 ): Promise<DebugChildVariablesInfo>
 ```
 
-디버그 자식 변수 정보를 조회합니다.
+Retrieves debug child variable information.
 
-**매개변수:**
-- `parent`: 부모 변수 ID 배열 (기본값: ['@DATAAGING', '@ROOT'])
+**Parameters:**
+- `parent`: Array of parent variable IDs (default: ['@DATAAGING', '@ROOT'])
 
-**반환 값:**
-- `DebugChildVariablesInfo`: 자식 변수 정보
+**Return value:**
+- `DebugChildVariablesInfo`: Child variable information
 
-**예제:**
+**Example:**
 ```typescript
-// 자식 변수 조회
+// Retrieve child variables
 const childInfo = await client.debuggerChildVariables(['@ROOT']);
 
-console.log('계층 구조:');
+console.log('Hierarchy:');
 childInfo.hierarchies.forEach(h => {
-  console.log(`- 부모: ${h.PARENT_ID}, 자식: ${h.CHILD_ID} (${h.CHILD_NAME})`);
+  console.log(`- Parent: ${h.PARENT_ID}, Child: ${h.CHILD_ID} (${h.CHILD_NAME})`);
 });
 
-console.log('변수:');
+console.log('Variables:');
 childInfo.variables.forEach(variable => {
-  console.log(`- ${variable.NAME}: ${variable.VALUE} (유형: ${variable.META_TYPE})`);
+  console.log(`- ${variable.NAME}: ${variable.VALUE} (Type: ${variable.META_TYPE})`);
 });
 ```
 
-### 변수 값 설정
+### Set Variable Value
 
 ```typescript
 async debuggerSetVariableValue(
@@ -515,23 +515,23 @@ async debuggerSetVariableValue(
 ): Promise<string>
 ```
 
-디버그 변수 값을 설정합니다.
+Sets a debug variable value.
 
-**매개변수:**
-- `variableName`: 변수 이름
-- `value`: 새 값
+**Parameters:**
+- `variableName`: Variable name
+- `value`: New value
 
-**반환 값:**
-- `string`: 응답 메시지
+**Return value:**
+- `string`: Response message
 
-**예제:**
+**Example:**
 ```typescript
-// 변수 값 설정
+// Set variable value
 const response = await client.debuggerSetVariableValue('LV_COUNT', '10');
-console.log('변수 값 설정 응답:', response);
+console.log('Variable value set response:', response);
 ```
 
-### 디버깅 단계 제어
+### Control Debugging Steps
 
 ```typescript
 async debuggerStep(
@@ -544,47 +544,47 @@ async debuggerStep(
 ): Promise<DebugStep>
 ```
 
-디버깅 단계를 제어합니다.
+Controls debugging steps.
 
-**매개변수:**
-- `steptype`: 단계 유형
-- `url`: 대상 URL (stepRunToLine 또는 stepJumpToLine 사용 시)
+**Parameters:**
+- `steptype`: Step type
+- `url`: Target URL (when using stepRunToLine or stepJumpToLine)
 
-**반환 값:**
-- `DebugStep`: 디버그 단계 정보
+**Return value:**
+- `DebugStep`: Debug step information
 
-**예제:**
+**Example:**
 ```typescript
-// 단계별 실행
-console.log('단계별 실행 중...');
+// Step into
+console.log('Stepping into...');
 const stepIntoResult = await client.debuggerStep('stepInto');
-console.log('단계별 실행 완료.');
+console.log('Step into completed.');
 
-// 단계 넘기기
-console.log('단계 넘기기 중...');
+// Step over
+console.log('Stepping over...');
 const stepOverResult = await client.debuggerStep('stepOver');
-console.log('단계 넘기기 완료.');
+console.log('Step over completed.');
 
-// 특정 줄로 실행
-console.log('특정 줄로 실행 중...');
+// Run to line
+console.log('Running to line...');
 const runToLineResult = await client.debuggerStep(
   'stepRunToLine',
   '/sap/bc/adt/programs/programs/ZEXAMPLE#start=20,0'
 );
-console.log('특정 줄로 실행 완료.');
+console.log('Run to line completed.');
 
-// 계속 실행
-console.log('계속 실행 중...');
+// Continue execution
+console.log('Continuing execution...');
 const continueResult = await client.debuggerStep('stepContinue');
-console.log('계속 실행 완료.');
+console.log('Continue completed.');
 
-// 디버기 종료
-console.log('디버기 종료 중...');
+// Terminate debuggee
+console.log('Terminating debuggee...');
 const terminateResult = await client.debuggerStep('terminateDebuggee');
-console.log('디버기 종료 완료.');
+console.log('Terminate completed.');
 ```
 
-### 스택 위치 이동
+### Navigate Stack Position
 
 ```typescript
 async debuggerGoToStack(
@@ -592,181 +592,181 @@ async debuggerGoToStack(
 ): Promise<void>
 ```
 
-스택 추적에서 특정 위치로 이동합니다.
+Navigates to a specific position in the stack trace.
 
-**매개변수:**
-- `urlOrPosition`: 스택 URL 또는 스택 위치 번호
+**Parameters:**
+- `urlOrPosition`: Stack URL or stack position number
 
-**예제:**
+**Example:**
 ```typescript
-// 스택 추적 조회
+// Retrieve stack trace
 const stackInfo = await client.debuggerStackTrace();
 
-// 스택의 특정 위치로 이동
+// Navigate to a specific position in the stack
 if (stackInfo.stack.length > 1) {
-  // 스택 URL로 이동 (DebugStackInfo에 stackUri가 있는 경우)
+  // Navigate by stack URL (if stackUri is available in DebugStackInfo)
   if ('stackUri' in stackInfo.stack[1]) {
     await client.debuggerGoToStack(stackInfo.stack[1].stackUri);
-    console.log(`스택 위치 ${stackInfo.stack[1].stackPosition}로 이동했습니다.`);
+    console.log(`Navigated to stack position ${stackInfo.stack[1].stackPosition}.`);
   } 
-  // 스택 위치 번호로 이동
+  // Navigate by stack position number
   else {
-    await client.debuggerGoToStack(1); // 두 번째 스택 항목으로 이동
-    console.log('스택 위치 1로 이동했습니다.');
+    await client.debuggerGoToStack(1); // Navigate to the second stack entry
+    console.log('Navigated to stack position 1.');
   }
 }
 ```
 
-## 전체 디버깅 워크플로우 예제
+## Complete Debugging Workflow Example
 
-다음 예제는 ABAP 디버깅의 일반적인 워크플로우를 보여줍니다:
+The following example demonstrates a typical workflow for ABAP debugging:
 
 ```typescript
 import { ADTClient } from 'abap-adt-api';
-import { v4 as uuidv4 } from 'uuid'; // 고유 ID 생성을 위해 uuid 패키지 사용
+import { v4 as uuidv4 } from 'uuid'; // Use uuid package to generate unique IDs
 
 async function debuggingWorkflow() {
   const client = new ADTClient('https://your-sap-server.com', 'username', 'password');
   await client.login();
   
   try {
-    // 디버깅에 필요한 ID 정의
+    // Define IDs needed for debugging
     const terminalId = 'terminal-' + uuidv4();
     const ideId = 'ide-' + uuidv4();
     const clientId = 'client-' + uuidv4();
     const userId = client.username.toUpperCase();
     
-    // 1. 브레이크포인트 설정
-    console.log('브레이크포인트 설정 중...');
+    // 1. Set breakpoint
+    console.log('Setting breakpoint...');
     const breakpointUrl = '/sap/bc/adt/programs/programs/ZEXAMPLE#start=10,0';
     const breakpoints = await client.debuggerSetBreakpoints(
-      'user',       // 사용자 모드
-      terminalId,   // 터미널 ID
+      'user',       // User mode
+      terminalId,   // Terminal ID
       ideId,        // IDE ID
-      clientId,     // 클라이언트 ID
-      [breakpointUrl], // 브레이크포인트 URL
-      userId        // 사용자 ID
+      clientId,     // Client ID
+      [breakpointUrl], // Breakpoint URL
+      userId        // User ID
     );
     
     if (breakpoints.length === 0 || !('uri' in breakpoints[0])) {
-      console.log('브레이크포인트 설정 실패');
+      console.log('Failed to set breakpoint');
       return;
     }
     
     const breakpoint = breakpoints[0];
-    console.log(`브레이크포인트 설정됨: ${breakpoint.id}`);
+    console.log(`Breakpoint set: ${breakpoint.id}`);
     
-    // 2. 디버그 리스너 시작
-    console.log('디버그 리스너 시작 중... (사용자가 ZEXAMPLE 프로그램을 실행할 때까지 대기)');
+    // 2. Start debug listener
+    console.log('Starting debug listener... (waiting for user to run ZEXAMPLE program)');
     const debuggee = await client.debuggerListen(
-      'user',     // 사용자 모드
-      terminalId, // 터미널 ID
+      'user',     // User mode
+      terminalId, // Terminal ID
       ideId,      // IDE ID
-      userId      // 사용자 ID
+      userId      // User ID
     );
     
-    // 디버그 이벤트가 없으면 종료
+    // Exit if no debug event
     if (!debuggee || 'type' in debuggee) {
       if (!debuggee) {
-        console.log('디버그 리스너 타임아웃');
+        console.log('Debug listener timed out');
       } else {
-        console.log(`디버그 리스너 오류: ${debuggee.message.text}`);
+        console.log(`Debug listener error: ${debuggee.message.text}`);
       }
       
-      // 리스너 정리
+      // Clean up listener
       await client.debuggerDeleteListener('user', terminalId, ideId, userId);
       return;
     }
     
-    console.log('디버그 이벤트 발생:');
-    console.log(`- 프로그램: ${debuggee.PRG_CURR}`);
-    console.log(`- 포함: ${debuggee.INCL_CURR}`);
-    console.log(`- 라인: ${debuggee.LINE_CURR}`);
+    console.log('Debug event occurred:');
+    console.log(`- Program: ${debuggee.PRG_CURR}`);
+    console.log(`- Include: ${debuggee.INCL_CURR}`);
+    console.log(`- Line: ${debuggee.LINE_CURR}`);
     
-    // 3. 디버깅 대상에 연결
-    console.log('디버깅 대상에 연결 중...');
+    // 3. Attach to debuggee
+    console.log('Attaching to debuggee...');
     const attachInfo = await client.debuggerAttach(
-      'user',             // 사용자 모드
-      debuggee.DEBUGGEE_ID, // 디버기 ID
-      userId              // 사용자 ID
+      'user',             // User mode
+      debuggee.DEBUGGEE_ID, // Debuggee ID
+      userId              // User ID
     );
     
-    console.log('디버깅 대상에 연결됨:');
-    console.log(`- 세션 ID: ${attachInfo.debugSessionId}`);
+    console.log('Attached to debuggee:');
+    console.log(`- Session ID: ${attachInfo.debugSessionId}`);
     
-    // 4. 디버거 설정
-    console.log('디버거 설정 중...');
+    // 4. Configure debugger
+    console.log('Configuring debugger...');
     await client.debuggerSaveSettings({
       systemDebugging: false,
       createExceptionObject: true
     });
     
-    // 5. 스택 추적 조회
-    console.log('스택 추적 조회 중...');
+    // 5. Retrieve stack trace
+    console.log('Retrieving stack trace...');
     const stackInfo = await client.debuggerStackTrace();
-    console.log('스택 추적:');
+    console.log('Stack trace:');
     stackInfo.stack.forEach((entry, index) => {
-      console.log(`- 스택 ${index}: ${entry.programName}, 라인 ${entry.line}`);
+      console.log(`- Stack ${index}: ${entry.programName}, line ${entry.line}`);
     });
     
-    // 6. 변수 조회
-    console.log('변수 조회 중...');
+    // 6. Retrieve variables
+    console.log('Retrieving variables...');
     const variables = await client.debuggerVariables(['@ROOT']);
-    console.log('변수:');
-    variables.slice(0, 5).forEach(variable => { // 처음 5개만 출력
+    console.log('Variables:');
+    variables.slice(0, 5).forEach(variable => { // Show only first 5
       console.log(`- ${variable.NAME}: ${variable.VALUE}`);
     });
     
-    // 7. 단계별 디버깅 수행
-    console.log('단계별 실행 중...');
+    // 7. Perform step-by-step debugging
+    console.log('Stepping into...');
     const stepResult = await client.debuggerStep('stepInto');
-    console.log('단계별 실행 완료.');
+    console.log('Step into completed.');
     
-    // 8. 이동 후 변수 다시 조회
-    console.log('단계 이동 후 변수 다시 조회 중...');
+    // 8. Retrieve variables again after moving
+    console.log('Retrieving variables again after step...');
     const updatedVariables = await client.debuggerVariables(['@ROOT']);
-    console.log('업데이트된 변수:');
-    updatedVariables.slice(0, 5).forEach(variable => { // 처음 5개만 출력
+    console.log('Updated variables:');
+    updatedVariables.slice(0, 5).forEach(variable => { // Show only first 5
       console.log(`- ${variable.NAME}: ${variable.VALUE}`);
     });
     
-    // 9. 변수 값 변경 (사용 가능한 경우)
+    // 9. Change variable value (if available)
     if (variables.some(v => v.NAME === 'LV_COUNT')) {
-      console.log('LV_COUNT 변수 값 변경 중...');
+      console.log('Changing LV_COUNT variable value...');
       await client.debuggerSetVariableValue('LV_COUNT', '10');
-      console.log('변수 값 변경됨.');
+      console.log('Variable value changed.');
     }
     
-    // 10. 계속 실행
-    console.log('계속 실행 중...');
+    // 10. Continue execution
+    console.log('Continuing execution...');
     await client.debuggerStep('stepContinue');
-    console.log('계속 실행 완료.');
+    console.log('Continue execution completed.');
     
-    // 11. 디버깅 종료
-    console.log('디버깅 종료 중...');
+    // 11. Terminate debugging
+    console.log('Terminating debugging...');
     await client.debuggerStep('terminateDebuggee');
-    console.log('디버깅 종료됨.');
+    console.log('Debugging terminated.');
     
-    // 12. 브레이크포인트 제거
-    console.log('브레이크포인트 제거 중...');
+    // 12. Remove breakpoint
+    console.log('Removing breakpoint...');
     if ('uri' in breakpoint) {
       await client.debuggerDeleteBreakpoints(
-        breakpoint,  // 브레이크포인트
-        'user',      // 사용자 모드
-        terminalId,  // 터미널 ID
+        breakpoint,  // Breakpoint
+        'user',      // User mode
+        terminalId,  // Terminal ID
         ideId,       // IDE ID
-        userId       // 사용자 ID
+        userId       // User ID
       );
-      console.log('브레이크포인트 제거됨.');
+      console.log('Breakpoint removed.');
     }
     
-    // 13. 디버그 리스너 중지
-    console.log('디버그 리스너 중지 중...');
+    // 13. Stop debug listener
+    console.log('Stopping debug listener...');
     await client.debuggerDeleteListener('user', terminalId, ideId, userId);
-    console.log('디버그 리스너 중지됨.');
+    console.log('Debug listener stopped.');
     
   } catch (error) {
-    console.error('디버깅 중 오류 발생:', error);
+    console.error('Error during debugging:', error);
   } finally {
     await client.logout();
   }
@@ -775,12 +775,12 @@ async function debuggingWorkflow() {
 debuggingWorkflow();
 ```
 
-## 참고 사항
+## Notes
 
-- 디버깅은 높은 수준의 권한이 필요하며, SAP 시스템 설정에 따라 제한될 수 있습니다.
-- 디버그 리스너는 장시간 실행되므로 네트워크 타임아웃을 고려해야 합니다.
-- 프로덕션 시스템에서의 디버깅은 성능에 큰 영향을 줄 수 있으므로 주의해서 사용해야 합니다.
-- 디버그 세션은 자원을 많이 사용하므로 작업이 완료되면 항상 정리해야 합니다.
-- 여러 개발자가 동일한 사용자에 대해 디버깅하면 충돌이 발생할 수 있습니다.
-- 터미널 ID와 IDE ID는 고유해야 하며, 일반적으로 UUID를 사용합니다.
-- 복잡한 객체 구조를 가진 변수는 `debuggerChildVariables`를 사용하여 계층적으로 탐색해야 합니다.
+- Debugging requires a high level of permissions and may be restricted depending on SAP system configuration.
+- Debug listeners run for a long time, so you should consider network timeouts.
+- Debugging in production systems can have a significant impact on performance, so use it with caution.
+- Debug sessions use a lot of resources, so always clean up when your work is complete.
+- Conflicts can occur if multiple developers debug the same user.
+- Terminal ID and IDE ID must be unique, typically using UUIDs.
+- Variables with complex object structures should be explored hierarchically using `debuggerChildVariables`.

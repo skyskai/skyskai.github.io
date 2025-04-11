@@ -1,37 +1,37 @@
-# ABAP Git 통합
+# ABAP Git Integration
 
-이 페이지에서는 ABAP ADT API를 사용하여 ABAP Git 저장소를 관리하는 방법을 설명합니다.
+This page explains how to manage ABAP Git repositories using the ABAP ADT API.
 
-## 저장소 관리
+## Repository Management
 
-### 저장소 목록 조회
+### Retrieve Repository List
 
 ```typescript
 async gitRepos(): Promise<GitRepo[]>
 ```
 
-시스템에 등록된 ABAP Git 저장소 목록을 조회합니다.
+Retrieves the list of ABAP Git repositories registered in the system.
 
-**반환 값:**
-- `GitRepo[]`: 저장소 정보 배열
+**Return value:**
+- `GitRepo[]`: Array of repository information
 
-**예제:**
+**Example:**
 ```typescript
-// 저장소 목록 조회
+// Retrieve repository list
 const repositories = await client.gitRepos();
-console.log(`등록된 저장소 수: ${repositories.length}`);
+console.log(`Number of registered repositories: ${repositories.length}`);
 
-// 저장소 정보 출력
+// Output repository information
 repositories.forEach(repo => {
-  console.log(`저장소: ${repo.key}`);
+  console.log(`Repository: ${repo.key}`);
   console.log(`- URL: ${repo.url}`);
-  console.log(`- 패키지: ${repo.sapPackage}`);
-  console.log(`- 브랜치: ${repo.branch_name}`);
-  console.log(`- 상태: ${repo.status_text}`);
+  console.log(`- Package: ${repo.sapPackage}`);
+  console.log(`- Branch: ${repo.branch_name}`);
+  console.log(`- Status: ${repo.status_text}`);
 });
 ```
 
-### 외부 저장소 정보 조회
+### Retrieve External Repository Information
 
 ```typescript
 async gitExternalRepoInfo(
@@ -41,27 +41,27 @@ async gitExternalRepoInfo(
 ): Promise<GitExternalInfo>
 ```
 
-외부 Git 저장소의 정보를 조회합니다.
+Retrieves information about an external Git repository.
 
-**매개변수:**
-- `repourl`: 저장소 URL
-- `user`: 사용자 이름 (선택적)
-- `password`: 비밀번호 (선택적)
+**Parameters:**
+- `repourl`: Repository URL
+- `user`: Username (optional)
+- `password`: Password (optional)
 
-**반환 값:**
-- `GitExternalInfo`: 외부 저장소 정보
+**Return value:**
+- `GitExternalInfo`: External repository information
 
-**예제:**
+**Example:**
 ```typescript
-// 외부 저장소 정보 조회
+// Retrieve external repository information
 const repoInfo = await client.gitExternalRepoInfo(
   'https://github.com/example/abap-project.git',
-  'gituser',      // 사용자 이름
-  'gitpassword'   // 비밀번호
+  'gituser',      // Username
+  'gitpassword'   // Password
 );
 
-console.log(`접근 모드: ${repoInfo.access_mode}`);
-console.log('브랜치:');
+console.log(`Access mode: ${repoInfo.access_mode}`);
+console.log('Branches:');
 repoInfo.branches.forEach(branch => {
   console.log(`- ${branch.name} (${branch.type})`);
   if (branch.is_head) {
@@ -70,7 +70,7 @@ repoInfo.branches.forEach(branch => {
 });
 ```
 
-### 저장소 생성
+### Create Repository
 
 ```typescript
 async gitCreateRepo(
@@ -83,38 +83,38 @@ async gitCreateRepo(
 ): Promise<GitObject[]>
 ```
 
-새 ABAP Git 저장소를 생성합니다.
+Creates a new ABAP Git repository.
 
-**매개변수:**
-- `packageName`: 패키지 이름
-- `repourl`: 저장소 URL
-- `branch`: 브랜치 이름 (기본값: "refs/heads/master")
-- `transport`: 트랜스포트 번호 (선택적)
-- `user`: Git 사용자 이름 (선택적)
-- `password`: Git 비밀번호 (선택적)
+**Parameters:**
+- `packageName`: Package name
+- `repourl`: Repository URL
+- `branch`: Branch name (default: "refs/heads/master")
+- `transport`: Transport number (optional)
+- `user`: Git username (optional)
+- `password`: Git password (optional)
 
-**반환 값:**
-- `GitObject[]`: 생성된 Git 객체 배열
+**Return value:**
+- `GitObject[]`: Array of created Git objects
 
-**예제:**
+**Example:**
 ```typescript
-// 새 저장소 생성
+// Create a new repository
 const objects = await client.gitCreateRepo(
-  'ZEXAMPLE_PKG',                               // 패키지
-  'https://github.com/example/abap-project.git', // 저장소 URL
-  'refs/heads/main',                            // 브랜치
-  'DEVK900123',                                 // 트랜스포트
-  'gituser',                                    // 사용자 이름
-  'gitpassword'                                 // 비밀번호
+  'ZEXAMPLE_PKG',                               // Package
+  'https://github.com/example/abap-project.git', // Repository URL
+  'refs/heads/main',                            // Branch
+  'DEVK900123',                                 // Transport
+  'gituser',                                    // Username
+  'gitpassword'                                 // Password
 );
 
-console.log('생성된 객체:');
+console.log('Created objects:');
 objects.forEach(obj => {
   console.log(`${obj.obj_type} ${obj.obj_name}: ${obj.obj_status}`);
 });
 ```
 
-### 저장소 풀(Pull)
+### Pull Repository
 
 ```typescript
 async gitPullRepo(
@@ -126,63 +126,63 @@ async gitPullRepo(
 ): Promise<GitObject[]>
 ```
 
-ABAP Git 저장소에서 변경 사항을 가져옵니다(Pull).
+Pulls changes from an ABAP Git repository.
 
-**매개변수:**
-- `repoId`: 저장소 ID
-- `branch`: 브랜치 이름 (기본값: "refs/heads/master")
-- `transport`: 트랜스포트 번호 (선택적)
-- `user`: Git 사용자 이름 (선택적)
-- `password`: Git 비밀번호 (선택적)
+**Parameters:**
+- `repoId`: Repository ID
+- `branch`: Branch name (default: "refs/heads/master")
+- `transport`: Transport number (optional)
+- `user`: Git username (optional)
+- `password`: Git password (optional)
 
-**반환 값:**
-- `GitObject[]`: 가져온 Git 객체 배열
+**Return value:**
+- `GitObject[]`: Array of pulled Git objects
 
-**예제:**
+**Example:**
 ```typescript
-// 저장소 목록 조회
+// Retrieve repository list
 const repositories = await client.gitRepos();
 if (repositories.length > 0) {
-  // 첫 번째 저장소에서 풀
+  // Pull from the first repository
   const pullResult = await client.gitPullRepo(
-    repositories[0].key,      // 저장소 ID
-    'refs/heads/main',        // 브랜치
-    'DEVK900123',             // 트랜스포트
-    'gituser',                // 사용자 이름
-    'gitpassword'             // 비밀번호
+    repositories[0].key,      // Repository ID
+    'refs/heads/main',        // Branch
+    'DEVK900123',             // Transport
+    'gituser',                // Username
+    'gitpassword'             // Password
   );
   
-  console.log('풀 결과:');
+  console.log('Pull result:');
   pullResult.forEach(obj => {
     console.log(`${obj.obj_type} ${obj.obj_name}: ${obj.obj_status}`);
     if (obj.msg_text) {
-      console.log(`- 메시지: ${obj.msg_text}`);
+      console.log(`- Message: ${obj.msg_text}`);
     }
   });
 }
 ```
 
-### 저장소 연결 해제
+### Unlink Repository
 
 ```typescript
 async gitUnlinkRepo(repoId: string): Promise<void>
 ```
 
-ABAP Git 저장소 연결을 해제합니다.
+Unlinks an ABAP Git repository.
 
-**매개변수:**
-- `repoId`: 저장소 ID
+**Parameters:**
+- `repoId`: Repository ID
 
-**예제:**
+**Example:**
 ```typescript
-// 저장소 연결 해제
+// Unlink repository
 await client.gitUnlinkRepo('Z_EXAMPLE_REPO');
-console.log('저장소 연결이 해제되었습니다.');
+console.log('Repository has been unlinked.');
 ```
 
-## 스테이징 및 푸시
+## Staging and Pushing
 
-### 저장소 확인
+### Check Repository
 
 ```typescript
 async checkRepo(
@@ -192,29 +192,29 @@ async checkRepo(
 ): Promise<void>
 ```
 
-ABAP Git 저장소를 확인합니다.
+Checks an ABAP Git repository.
 
-**매개변수:**
-- `repo`: 저장소 정보
-- `user`: Git 사용자 이름 (선택적)
-- `password`: Git 비밀번호 (선택적)
+**Parameters:**
+- `repo`: Repository information
+- `user`: Git username (optional)
+- `password`: Git password (optional)
 
-**예제:**
+**Example:**
 ```typescript
-// 저장소 목록 조회
+// Retrieve repository list
 const repositories = await client.gitRepos();
 if (repositories.length > 0) {
-  // 첫 번째 저장소 확인
+  // Check the first repository
   await client.checkRepo(
-    repositories[0],  // 저장소
-    'gituser',        // 사용자 이름
-    'gitpassword'     // 비밀번호
+    repositories[0],  // Repository
+    'gituser',        // Username
+    'gitpassword'     // Password
   );
-  console.log('저장소 확인 완료');
+  console.log('Repository check completed');
 }
 ```
 
-### 스테이징 조회
+### Retrieve Staging Information
 
 ```typescript
 async stageRepo(
@@ -224,52 +224,52 @@ async stageRepo(
 ): Promise<GitStaging>
 ```
 
-ABAP Git 저장소의 스테이징 영역을 조회합니다.
+Retrieves the staging area of an ABAP Git repository.
 
-**매개변수:**
-- `repo`: 저장소 정보
-- `user`: Git 사용자 이름 (선택적)
-- `password`: Git 비밀번호 (선택적)
+**Parameters:**
+- `repo`: Repository information
+- `user`: Git username (optional)
+- `password`: Git password (optional)
 
-**반환 값:**
-- `GitStaging`: 스테이징 정보
+**Return value:**
+- `GitStaging`: Staging information
 
-**예제:**
+**Example:**
 ```typescript
-// 저장소 목록 조회
+// Retrieve repository list
 const repositories = await client.gitRepos();
 if (repositories.length > 0) {
-  // 첫 번째 저장소의 스테이징 조회
+  // Retrieve staging information for the first repository
   const staging = await client.stageRepo(
-    repositories[0],  // 저장소
-    'gituser',        // 사용자 이름
-    'gitpassword'     // 비밀번호
+    repositories[0],  // Repository
+    'gituser',        // Username
+    'gitpassword'     // Password
   );
   
-  console.log('스테이징 정보:');
-  console.log(`- 스테이징된 객체: ${staging.staged.length}개`);
-  console.log(`- 스테이징되지 않은 객체: ${staging.unstaged.length}개`);
-  console.log(`- 무시된 객체: ${staging.ignored.length}개`);
+  console.log('Staging information:');
+  console.log(`- Staged objects: ${staging.staged.length}`);
+  console.log(`- Unstaged objects: ${staging.unstaged.length}`);
+  console.log(`- Ignored objects: ${staging.ignored.length}`);
   
-  // 스테이징된 객체 출력
+  // Output staged objects
   staging.staged.forEach(obj => {
-    console.log(`스테이징된 객체: ${obj.name} (${obj.type})`);
+    console.log(`Staged object: ${obj.name} (${obj.type})`);
     obj.abapGitFiles.forEach(file => {
-      console.log(`- 파일: ${file.path}`);
+      console.log(`- File: ${file.path}`);
     });
   });
   
-  // 스테이징되지 않은 객체 출력
+  // Output unstaged objects
   staging.unstaged.forEach(obj => {
-    console.log(`스테이징되지 않은 객체: ${obj.name} (${obj.type})`);
+    console.log(`Unstaged object: ${obj.name} (${obj.type})`);
     obj.abapGitFiles.forEach(file => {
-      console.log(`- 파일: ${file.path}`);
+      console.log(`- File: ${file.path}`);
     });
   });
 }
 ```
 
-### 변경 사항 푸시(Push)
+### Push Changes
 
 ```typescript
 async pushRepo(
@@ -280,30 +280,30 @@ async pushRepo(
 ): Promise<void>
 ```
 
-ABAP Git 저장소의 변경 사항을 외부 저장소로 푸시합니다.
+Pushes changes from an ABAP Git repository to an external repository.
 
-**매개변수:**
-- `repo`: 저장소 정보
-- `staging`: 스테이징 정보
-- `user`: Git 사용자 이름 (선택적)
-- `password`: Git 비밀번호 (선택적)
+**Parameters:**
+- `repo`: Repository information
+- `staging`: Staging information
+- `user`: Git username (optional)
+- `password`: Git password (optional)
 
-**예제:**
+**Example:**
 ```typescript
-// 저장소 목록 조회
+// Retrieve repository list
 const repositories = await client.gitRepos();
 if (repositories.length > 0) {
-  // 스테이징 정보 조회
+  // Retrieve staging information
   const staging = await client.stageRepo(
     repositories[0],
     'gituser',
     'gitpassword'
   );
   
-  // 커밋 메시지 설정
-  staging.comment = '변경 사항 커밋: ' + new Date().toISOString();
+  // Set commit message
+  staging.comment = 'Commit changes: ' + new Date().toISOString();
   
-  // 작성자 및 커미터 설정
+  // Set author and committer
   staging.author = {
     name: 'Your Name',
     email: 'your.email@example.com'
@@ -313,7 +313,7 @@ if (repositories.length > 0) {
     email: 'your.email@example.com'
   };
   
-  // 푸시
+  // Push
   await client.pushRepo(
     repositories[0],
     staging,
@@ -321,13 +321,13 @@ if (repositories.length > 0) {
     'gitpassword'
   );
   
-  console.log('변경 사항이 성공적으로 푸시되었습니다.');
+  console.log('Changes have been successfully pushed.');
 }
 ```
 
-## 브랜치 관리
+## Branch Management
 
-### 저장소 브랜치 전환
+### Switch Repository Branch
 
 ```typescript
 async switchRepoBranch(
@@ -339,34 +339,34 @@ async switchRepoBranch(
 ): Promise<void>
 ```
 
-ABAP Git 저장소의 브랜치를 전환합니다.
+Switches the branch of an ABAP Git repository.
 
-**매개변수:**
-- `repo`: 저장소 정보
-- `branch`: 브랜치 이름
-- `create`: 브랜치 생성 여부 (기본값: false)
-- `user`: Git 사용자 이름 (선택적)
-- `password`: Git 비밀번호 (선택적)
+**Parameters:**
+- `repo`: Repository information
+- `branch`: Branch name
+- `create`: Whether to create the branch (default: false)
+- `user`: Git username (optional)
+- `password`: Git password (optional)
 
-**예제:**
+**Example:**
 ```typescript
-// 저장소 목록 조회
+// Retrieve repository list
 const repositories = await client.gitRepos();
 if (repositories.length > 0) {
-  // 브랜치 전환
+  // Switch branch
   await client.switchRepoBranch(
-    repositories[0],  // 저장소
-    'feature/new-feature',  // 브랜치 이름
-    true,            // 새 브랜치 생성
-    'gituser',       // 사용자 이름
-    'gitpassword'    // 비밀번호
+    repositories[0],  // Repository
+    'feature/new-feature',  // Branch name
+    true,            // Create new branch
+    'gituser',       // Username
+    'gitpassword'    // Password
   );
   
-  console.log('브랜치가 전환되었습니다.');
+  console.log('Branch has been switched.');
 }
 ```
 
-### 원격 저장소 정보
+### Remote Repository Information
 
 ```typescript
 async remoteRepoInfo(
@@ -376,41 +376,41 @@ async remoteRepoInfo(
 ): Promise<GitRemoteInfo>
 ```
 
-원격 저장소의 정보를 조회합니다.
+Retrieves information about a remote repository.
 
-**주의:** 이 메서드는 버전 1.2.1부터 `gitExternalRepoInfo`와 중복되어 더 이상 사용되지 않습니다.
+**Note:** This method is deprecated since version 1.2.1 as it duplicates `gitExternalRepoInfo`.
 
-**매개변수:**
-- `repo`: 저장소 정보
-- `user`: Git 사용자 이름 (선택적)
-- `password`: Git 비밀번호 (선택적)
+**Parameters:**
+- `repo`: Repository information
+- `user`: Git username (optional)
+- `password`: Git password (optional)
 
-**반환 값:**
-- `GitRemoteInfo`: 원격 저장소 정보
+**Return value:**
+- `GitRemoteInfo`: Remote repository information
 
-**예제:**
+**Example:**
 ```typescript
-// 저장소 목록 조회
+// Retrieve repository list
 const repositories = await client.gitRepos();
 if (repositories.length > 0) {
-  // 원격 저장소 정보 조회
+  // Retrieve remote repository information
   const remoteInfo = await client.remoteRepoInfo(
     repositories[0],
     'gituser',
     'gitpassword'
   );
   
-  console.log(`접근 모드: ${remoteInfo.access_mode}`);
-  console.log('브랜치:');
+  console.log(`Access mode: ${remoteInfo.access_mode}`);
+  console.log('Branches:');
   remoteInfo.branches.forEach(branch => {
     console.log(`- ${branch.name}`);
   });
 }
 ```
 
-## 전체 워크플로우 예제
+## Complete Workflow Example
 
-다음 예제는 ABAP Git 저장소를 사용하는 전체 워크플로우를 보여줍니다:
+The following example demonstrates a complete workflow using an ABAP Git repository:
 
 ```typescript
 import { ADTClient } from 'abap-adt-api';
@@ -420,38 +420,38 @@ async function gitWorkflow() {
   await client.login();
   
   try {
-    // Git 저장소 정보
+    // Git repository information
     const gitUrl = 'https://github.com/example/abap-project.git';
     const gitUser = 'gituser';
     const gitPassword = 'gitpassword';
     const packageName = 'ZEXAMPLE_PKG';
     const transportNumber = 'DEVK900123';
     
-    // 1. 저장소 목록 조회
+    // 1. Retrieve repository list
     const repositories = await client.gitRepos();
-    console.log(`등록된 저장소 수: ${repositories.length}`);
+    console.log(`Number of registered repositories: ${repositories.length}`);
     
     let repo;
     
-    // 2. 기존 저장소 검색 또는 새 저장소 생성
+    // 2. Search for existing repository or create a new one
     const existingRepo = repositories.find(r => r.url === gitUrl && r.sapPackage === packageName);
     if (existingRepo) {
-      console.log('기존 저장소를 사용합니다:', existingRepo.key);
+      console.log('Using existing repository:', existingRepo.key);
       repo = existingRepo;
     } else {
-      console.log('새 저장소를 생성합니다...');
+      console.log('Creating a new repository...');
       
-      // 외부 저장소 정보 조회
+      // Retrieve external repository information
       const externalInfo = await client.gitExternalRepoInfo(gitUrl, gitUser, gitPassword);
-      console.log('외부 저장소 정보:');
-      console.log(`- 접근 모드: ${externalInfo.access_mode}`);
-      console.log(`- 브랜치 수: ${externalInfo.branches.length}`);
+      console.log('External repository information:');
+      console.log(`- Access mode: ${externalInfo.access_mode}`);
+      console.log(`- Number of branches: ${externalInfo.branches.length}`);
       
-      // 기본 브랜치 찾기
+      // Find default branch
       const defaultBranch = externalInfo.branches.find(b => b.is_head) || externalInfo.branches[0];
-      console.log(`- 기본 브랜치: ${defaultBranch?.name || 'refs/heads/master'}`);
+      console.log(`- Default branch: ${defaultBranch?.name || 'refs/heads/master'}`);
       
-      // 새 저장소 생성
+      // Create new repository
       const branchName = defaultBranch?.name || 'refs/heads/master';
       const objects = await client.gitCreateRepo(
         packageName,
@@ -462,24 +462,24 @@ async function gitWorkflow() {
         gitPassword
       );
       
-      console.log('생성된 객체:');
+      console.log('Created objects:');
       objects.forEach(obj => {
         console.log(`- ${obj.obj_type} ${obj.obj_name}: ${obj.obj_status}`);
       });
       
-      // 저장소 목록 재조회
+      // Retrieve repository list again
       const updatedRepos = await client.gitRepos();
       repo = updatedRepos.find(r => r.url === gitUrl && r.sapPackage === packageName);
       
       if (!repo) {
-        throw new Error('저장소 생성 후 찾을 수 없습니다.');
+        throw new Error('Repository not found after creation.');
       }
       
-      console.log('새 저장소가 생성되었습니다:', repo.key);
+      console.log('New repository has been created:', repo.key);
     }
     
-    // 3. 저장소 풀(Pull) 수행
-    console.log('저장소에서 변경 사항을 가져오는 중...');
+    // 3. Perform repository pull
+    console.log('Pulling changes from repository...');
     const pullResults = await client.gitPullRepo(
       repo.key,
       repo.branch_name,
@@ -488,33 +488,33 @@ async function gitWorkflow() {
       gitPassword
     );
     
-    console.log('풀 결과:');
+    console.log('Pull results:');
     pullResults.forEach(obj => {
       console.log(`- ${obj.obj_type} ${obj.obj_name}: ${obj.obj_status}`);
       if (obj.msg_text) {
-        console.log(`  메시지: ${obj.msg_text}`);
+        console.log(`  Message: ${obj.msg_text}`);
       }
     });
     
-    // 4. 스테이징 상태 조회
-    console.log('스테이징 상태를 조회하는 중...');
+    // 4. Retrieve staging status
+    console.log('Retrieving staging status...');
     const staging = await client.stageRepo(repo, gitUser, gitPassword);
     
-    console.log('스테이징 정보:');
-    console.log(`- 스테이징된 객체: ${staging.staged.length}개`);
-    console.log(`- 스테이징되지 않은 객체: ${staging.unstaged.length}개`);
+    console.log('Staging information:');
+    console.log(`- Staged objects: ${staging.staged.length}`);
+    console.log(`- Unstaged objects: ${staging.unstaged.length}`);
     
-    // 5. 로컬 변경 사항이 있는 경우 푸시(Push) 수행
+    // 5. Push local changes if there are any
     if (staging.unstaged.length > 0) {
-      console.log('스테이징되지 않은 변경 사항을 처리하는 중...');
+      console.log('Processing unstaged changes...');
       
-      // 모든 변경 사항을 스테이징에 추가
-      // (이 예에서는 단순화를 위해 모든 unstaged 항목을 staged로 이동)
+      // Add all changes to staging
+      // (In this example, move all unstaged items to staged for simplicity)
       staging.staged = [...staging.staged, ...staging.unstaged];
       staging.unstaged = [];
       
-      // 커밋 정보 설정
-      staging.comment = '변경 사항 커밋: ' + new Date().toISOString();
+      // Set commit information
+      staging.comment = 'Commit changes: ' + new Date().toISOString();
       staging.author = {
         name: 'Your Name',
         email: 'your.email@example.com'
@@ -524,29 +524,29 @@ async function gitWorkflow() {
         email: 'your.email@example.com'
       };
       
-      // 변경 사항 푸시
-      console.log('변경 사항을 푸시하는 중...');
+      // Push changes
+      console.log('Pushing changes...');
       await client.pushRepo(repo, staging, gitUser, gitPassword);
-      console.log('변경 사항이 성공적으로 푸시되었습니다.');
+      console.log('Changes have been successfully pushed.');
     } else {
-      console.log('푸시할 변경 사항이 없습니다.');
+      console.log('No changes to push.');
     }
     
-    // 6. 브랜치 전환 예제 (실제로 실행하진 않음)
-    if (false) { // 예시용
-      console.log('새 브랜치로 전환하는 중...');
+    // 6. Branch switching example (not actually executed)
+    if (false) { // For example only
+      console.log('Switching to a new branch...');
       await client.switchRepoBranch(
         repo,
         'feature/new-feature',
-        true, // 새 브랜치 생성
+        true, // Create new branch
         gitUser,
         gitPassword
       );
-      console.log('브랜치가 전환되었습니다.');
+      console.log('Branch has been switched.');
     }
     
   } catch (error) {
-    console.error('오류 발생:', error);
+    console.error('Error occurred:', error);
   } finally {
     await client.logout();
   }
@@ -555,11 +555,11 @@ async function gitWorkflow() {
 gitWorkflow();
 ```
 
-## 참고 사항
+## Notes
 
-- ABAP Git 기능을 사용하려면 SAP 시스템에 ABAP Git 확장이 설치되어 있어야 합니다.
-- 비공개 저장소에 접근할 때는 항상 Git 사용자 이름과 비밀번호를 제공해야 합니다.
-- 트랜스포트 관련 작업(풀, 푸시 등)에는 유효한 트랜스포트 요청이 필요합니다.
-- 대규모 ABAP Git 작업은 시스템 성능에 영향을 줄 수 있으므로 주의해서 사용하세요.
-- 브랜치 관리 작업은 SAP 버전과 ABAP Git 확장 버전에 따라 다를 수 있습니다.
-- 스테이징 및 푸시 작업에서는 항상 적절한。 커밋 메시지와 작성자 정보를 제공하세요.
+- ABAP Git functionality requires the ABAP Git extension to be installed in the SAP system.
+- Always provide Git username and password when accessing private repositories.
+- Transport-related operations (pull, push, etc.) require a valid transport request.
+- Be cautious when using large-scale ABAP Git operations as they can impact system performance.
+- Branch management operations may vary depending on the SAP version and ABAP Git extension version.
+- Always provide appropriate commit messages and author information in staging and pushing operations.

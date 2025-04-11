@@ -1,70 +1,70 @@
-# 기본 예제
+# Basic Examples
 
-이 페이지에서는 ABAP ADT API 라이브러리의 기본 기능을 보여주는 예제를 제공합니다.
+This page provides examples demonstrating the basic functionality of the ABAP ADT API library.
 
-## 목차
+## Table of Contents
 
-- [시스템 연결 및 기본 정보 조회](#시스템-연결-및-기본-정보-조회)
-- [객체 구조 탐색](#객체-구조-탐색)
-- [소스 코드 조회 및 수정](#소스-코드-조회-및-수정)
-- [구문 검사 및 활성화](#구문-검사-및-활성화)
-- [코드 완성 활용](#코드-완성-활용)
-- [객체 생성](#객체-생성)
+- [System Connection and Basic Information Retrieval](#system-connection-and-basic-information-retrieval)
+- [Object Structure Exploration](#object-structure-exploration)
+- [Source Code Retrieval and Modification](#source-code-retrieval-and-modification)
+- [Syntax Check and Activation](#syntax-check-and-activation)
+- [Using Code Completion](#using-code-completion)
+- [Object Creation](#object-creation)
 
-## 시스템 연결 및 기본 정보 조회
+## System Connection and Basic Information Retrieval
 
-### 목적
+### Purpose
 
-SAP 시스템에 연결하고 기본 시스템 정보를 조회하는 방법을 보여줍니다.
+Shows how to connect to an SAP system and retrieve basic system information.
 
-### 코드
+### Code
 
 ```typescript
 // connect-and-info.ts
 import { ADTClient } from 'abap-adt-api';
 
 async function connectAndGetInfo() {
-  // 클라이언트 생성
+  // Create client
   const client = new ADTClient(
     'https://your-sap-server.com',
     'username',
     'password',
-    '001',  // 클라이언트 (선택적)
-    'KO'    // 언어 (선택적)
+    '001',  // Client (optional)
+    'KO'    // Language (optional)
   );
   
   try {
-    // 로그인
-    console.log('로그인 중...');
+    // Login
+    console.log('Logging in...');
     const loggedIn = await client.login();
     
     if (!loggedIn) {
-      console.error('로그인 실패');
+      console.error('Login failed');
       return;
     }
     
-    console.log('로그인 성공');
-    console.log(`사용자: ${client.username}`);
-    console.log(`기본 URL: ${client.baseUrl}`);
-    console.log(`세션 ID: ${client.sessionID}`);
+    console.log('Login successful');
+    console.log(`User: ${client.username}`);
+    console.log(`Base URL: ${client.baseUrl}`);
+    console.log(`Session ID: ${client.sessionID}`);
     
-    // 시스템 정보 조회
-    console.log('\n시스템 정보 조회 중...');
+    // Retrieve system information
+    console.log('\nRetrieving system information...');
     
-    // 1. ADT 디스커버리 서비스 조회
+    // 1. Query ADT discovery service
     const discovery = await client.adtDiscovery();
-    console.log(`발견된 워크스페이스 수: ${discovery.length}`);
+    console.log(`Number of workspaces discovered: ${discovery.length}`);
     
     discovery.forEach((workspace, index) => {
-      console.log(`\n워크스페이스 #${index + 1}: ${workspace.title}`);
-      console.log('컬렉션:');
+      console.log(`\nWorkspace #${index + 1}: ${workspace.title}`);
+      console.log('Collections:');
       
       workspace.collection.forEach(collection => {
         console.log(`- ${collection.href}`);
         
-        // 템플릿 링크 출력
+        // Print template links
         if (collection.templateLinks && collection.templateLinks.length > 0) {
-          console.log('  템플릿 링크:');
+          console.log('  Template links:');
           collection.templateLinks.forEach(link => {
             console.log(`  - ${link.rel}: ${link.template}`);
           });
@@ -72,88 +72,88 @@ async function connectAndGetInfo() {
       });
     });
     
-    // 2. 객체 유형 조회
-    console.log('\n객체 유형 조회 중...');
+    // 2. Query object types
+    console.log('\nRetrieving object types...');
     const types = await client.objectTypes();
     
-    console.log(`발견된 객체 유형 수: ${types.length}`);
-    console.log('주요 객체 유형:');
+    console.log(`Number of object types discovered: ${types.length}`);
+    console.log('Major object types:');
     
     types.slice(0, 10).forEach(type => {
       console.log(`- ${type.name}: ${type.description} (${type.type})`);
     });
     
-    // 3. 시스템 사용자 조회
-    console.log('\n시스템 사용자 조회 중...');
+    // 3. Query system users
+    console.log('\nRetrieving system users...');
     const users = await client.systemUsers();
     
-    console.log(`발견된 사용자 수: ${users.length}`);
-    console.log('사용자 샘플:');
+    console.log(`Number of users discovered: ${users.length}`);
+    console.log('Sample users:');
     
     users.slice(0, 5).forEach(user => {
       console.log(`- ${user.id}: ${user.title}`);
     });
     
   } catch (error) {
-    console.error('오류 발생:', error);
+    console.error('Error occurred:', error);
   } finally {
-    // 로그아웃
+    // Logout
     await client.logout();
-    console.log('\n로그아웃 완료');
+    console.log('\nLogout completed');
   }
 }
 
 connectAndGetInfo().catch(console.error);
 ```
 
-### 실행 결과
+### Execution Results
 
 ```
-로그인 중...
-로그인 성공
-사용자: username
-기본 URL: https://your-sap-server.com
-세션 ID: SAP_SESSIONID_001_A1B2C3D4E5
+Logging in...
+Login successful
+User: username
+Base URL: https://your-sap-server.com
+Session ID: SAP_SESSIONID_001_A1B2C3D4E5
 
-시스템 정보 조회 중...
-발견된 워크스페이스 수: 3
+Retrieving system information...
+Number of workspaces discovered: 3
 
-워크스페이스 #1: ABAP
-컬렉션:
+Workspace #1: ABAP
+Collections:
 - /sap/bc/adt/repository/nodestructure
-  템플릿 링크:
+  Template links:
   - http://www.sap.com/adt/relations/packagestructure: /sap/bc/adt/repository/nodestructure?parent_name={package_name}&parent_type=DEVC/K
 ...
 
-객체 유형 조회 중...
-발견된 객체 유형 수: 287
-주요 객체 유형:
-- PROG/P: ABAP 프로그램 (PROG)
-- CLAS/OC: ABAP 클래스 (CLAS)
+Retrieving object types...
+Number of object types discovered: 287
+Major object types:
+- PROG/P: ABAP Program (PROG)
+- CLAS/OC: ABAP Class (CLAS)
 ...
 
-시스템 사용자 조회 중...
-발견된 사용자 수: 124
-사용자 샘플:
-- DEVELOPER: 개발자
+Retrieving system users...
+Number of users discovered: 124
+Sample users:
+- DEVELOPER: Developer
 ...
 
-로그아웃 완료
+Logout completed
 ```
 
-### 확장 방법
+### How to Extend
 
-- 다른 시스템 정보 API를 탐색하여 더 많은 정보 수집
-- 정기적으로 실행하여 시스템 상태 모니터링
-- 사용자 권한 및 역할 분석 추가
+- Explore other system information APIs to collect more data
+- Run periodically to monitor system status
+- Add user permission and role analysis
 
-## 객체 구조 탐색
+## Object Structure Exploration
 
-### 목적
+### Purpose
 
-ABAP 객체 구조를 탐색하고 패키지, 프로그램, 클래스 등의 내용을 조회하는 방법을 보여줍니다.
+Shows how to explore ABAP object structures and retrieve content of packages, programs, classes, etc.
 
-### 코드
+### Code
 
 ```typescript
 // explore-objects.ts
@@ -169,15 +169,15 @@ async function exploreObjects() {
   try {
     await client.login();
     
-    // 1. 패키지 내용 조회
-    console.log('패키지 내용 조회 중...');
+    // 1. Retrieve package contents
+    console.log('Retrieving package contents...');
     const packageName = 'ZEXAMPLE_PKG';
     const packageContents = await client.nodeContents('DEVC/K', packageName);
     
-    console.log(`패키지 '${packageName}'의 객체 수: ${packageContents.nodes.length}`);
-    console.log('객체 유형 별 카운트:');
+    console.log(`Number of objects in package '${packageName}': ${packageContents.nodes.length}`);
+    console.log('Count by object type:');
     
-    // 객체 유형 별로 그룹화
+    // Group by object type
     const typeGroups = packageContents.nodes.reduce((groups, node) => {
       const type = node.OBJECT_TYPE;
       groups[type] = (groups[type] || 0) + 1;
@@ -188,79 +188,79 @@ async function exploreObjects() {
       console.log(`- ${type}: ${count}`);
     });
     
-    // 2. 특정 프로그램 구조 조회
-    console.log('\n프로그램 구조 조회 중...');
+    // 2. Retrieve specific program structure
+    console.log('\nRetrieving program structure...');
     const programName = 'ZEXAMPLE_PROGRAM';
     const programUrl = `/sap/bc/adt/programs/programs/${programName}`;
     
     const programStructure = await client.objectStructure(programUrl);
     
-    console.log(`프로그램: ${programStructure.metaData['adtcore:name']}`);
-    console.log(`설명: ${programStructure.metaData['adtcore:description']}`);
-    console.log(`유형: ${programStructure.metaData['adtcore:type']}`);
-    console.log(`언어: ${programStructure.metaData['adtcore:language']}`);
-    console.log(`담당자: ${programStructure.metaData['adtcore:responsible']}`);
+    console.log(`Program: ${programStructure.metaData['adtcore:name']}`);
+    console.log(`Description: ${programStructure.metaData['adtcore:description']}`);
+    console.log(`Type: ${programStructure.metaData['adtcore:type']}`);
+    console.log(`Language: ${programStructure.metaData['adtcore:language']}`);
+    console.log(`Responsible: ${programStructure.metaData['adtcore:responsible']}`);
     
-    // 프로그램 링크 출력
-    console.log('링크:');
+    // Print program links
+    console.log('Links:');
     programStructure.links.forEach(link => {
       console.log(`- ${link.rel}: ${link.href}`);
     });
     
-    // 3. 클래스 구조 조회
-    console.log('\n클래스 구조 조회 중...');
+    // 3. Retrieve class structure
+    console.log('\nRetrieving class structure...');
     const className = 'ZCL_EXAMPLE_CLASS';
     const classUrl = `/sap/bc/adt/oo/classes/${className}`;
     
     const classStructure = await client.objectStructure(classUrl);
     
-    // 클래스인지 확인
+    // Verify if it's a class
     if (client.isClassStructure(classStructure)) {
-      console.log(`클래스: ${classStructure.metaData['adtcore:name']}`);
-      console.log(`설명: ${classStructure.metaData['adtcore:description']}`);
-      console.log(`추상: ${classStructure.metaData['class:abstract']}`);
-      console.log(`최종: ${classStructure.metaData['class:final']}`);
-      console.log(`가시성: ${classStructure.metaData['class:visibility']}`);
+      console.log(`Class: ${classStructure.metaData['adtcore:name']}`);
+      console.log(`Description: ${classStructure.metaData['adtcore:description']}`);
+      console.log(`Abstract: ${classStructure.metaData['class:abstract']}`);
+      console.log(`Final: ${classStructure.metaData['class:final']}`);
+      console.log(`Visibility: ${classStructure.metaData['class:visibility']}`);
       
-      // 클래스 포함 출력
-      console.log('\n클래스 포함:');
+      // Print class includes
+      console.log('\nClass includes:');
       classStructure.includes.forEach(include => {
         console.log(`- ${include['class:includeType']}: ${include['adtcore:name']}`);
       });
       
-      // 클래스 구성요소 조회
-      console.log('\n클래스 구성요소 조회 중...');
+      // Retrieve class components
+      console.log('\nRetrieving class components...');
       const components = await client.classComponents(classUrl);
       
-      // 메서드, 속성 등 출력
+      // Print methods, attributes, etc.
       const methods = components.components.filter(c => c['adtcore:type'] === 'method');
       const attributes = components.components.filter(c => c['adtcore:type'] === 'attribute');
       
-      console.log(`메서드 수: ${methods.length}`);
-      console.log('메서드 샘플:');
+      console.log(`Number of methods: ${methods.length}`);
+      console.log('Sample methods:');
       methods.slice(0, 5).forEach(method => {
-        console.log(`- ${method['adtcore:name']} (가시성: ${method.visibility})`);
+        console.log(`- ${method['adtcore:name']} (Visibility: ${method.visibility})`);
       });
       
-      console.log(`\n속성 수: ${attributes.length}`);
-      console.log('속성 샘플:');
+      console.log(`\nNumber of attributes: ${attributes.length}`);
+      console.log('Sample attributes:');
       attributes.slice(0, 5).forEach(attr => {
-        console.log(`- ${attr['adtcore:name']} (가시성: ${attr.visibility})`);
+        console.log(`- ${attr['adtcore:name']} (Visibility: ${attr.visibility})`);
       });
     }
     
-    // 4. 객체 경로 찾기
-    console.log('\n객체 경로 찾기...');
+    // 4. Find object path
+    console.log('\nFinding object path...');
     const objectPath = await client.findObjectPath(classUrl);
     
-    console.log(`객체 '${className}'의 경로:`);
+    console.log(`Path for object '${className}':`);
     objectPath.forEach((step, index) => {
       const indent = ' '.repeat(index * 2);
       console.log(`${indent}${index + 1}. ${step['adtcore:type']}: ${step['adtcore:name']}`);
     });
     
   } catch (error) {
-    console.error('오류 발생:', error);
+    console.error('Error occurred:', error);
   } finally {
     await client.logout();
   }
@@ -269,19 +269,19 @@ async function exploreObjects() {
 exploreObjects().catch(console.error);
 ```
 
-### 확장 방법
+### How to Extend
 
-- 재귀적 패키지 탐색 추가
-- 특정 유형의 객체만 필터링하여 탐색
-- 객체 간 의존성 분석 구현
+- Add recursive package exploration
+- Filter to explore only specific types of objects
+- Implement object dependency analysis
 
-## 소스 코드 조회 및 수정
+## Source Code Retrieval and Modification
 
-### 목적
+### Purpose
 
-ABAP 객체의 소스 코드를 조회하고 수정하는 방법을 보여줍니다.
+Shows how to retrieve and modify source code of ABAP objects.
 
-### 코드
+### Code
 
 ```typescript
 // source-code-management.ts
@@ -298,79 +298,79 @@ async function manageSourceCode() {
   try {
     await client.login();
     
-    // 상태 유지 세션으로 설정 (객체 잠금을 위해 필요)
+    // Set stateful session (required for object locking)
     client.stateful = "stateful";
     
-    // 1. 객체 구조 조회
+    // 1. Retrieve object structure
     const objectUrl = '/sap/bc/adt/programs/programs/ZEXAMPLE_PROGRAM';
-    console.log(`객체 구조 조회 중: ${objectUrl}`);
+    console.log(`Retrieving object structure: ${objectUrl}`);
     
     const objectStructure = await client.objectStructure(objectUrl);
-    console.log(`객체 이름: ${objectStructure.metaData['adtcore:name']}`);
+    console.log(`Object name: ${objectStructure.metaData['adtcore:name']}`);
     
-    // 2. 소스 코드 URL 조회
+    // 2. Get source code URL
     const sourceUrl = ADTClient.mainInclude(objectStructure);
-    console.log(`소스 코드 URL: ${sourceUrl}`);
+    console.log(`Source code URL: ${sourceUrl}`);
     
-    // 3. 소스 코드 조회
-    console.log('소스 코드 조회 중...');
+    // 3. Retrieve source code
+    console.log('Retrieving source code...');
     const source = await client.getObjectSource(sourceUrl);
     
-    console.log(`소스 코드 (처음 100자): ${source.substring(0, 100)}...`);
+    console.log(`Source code (first 100 chars): ${source.substring(0, 100)}...`);
     
-    // 소스 코드를 로컬 파일로 저장
+    // Save source code to local file
     const localFilePath = './source_backup.abap';
     fs.writeFileSync(localFilePath, source);
-    console.log(`소스 코드를 ${localFilePath}에 저장했습니다.`);
+    console.log(`Source code saved to ${localFilePath}`);
     
-    // 4. 트랜스포트 정보 조회
-    console.log('트랜스포트 정보 조회 중...');
+    // 4. Get transport information
+    console.log('Retrieving transport information...');
     const transportInfo = await client.transportInfo(objectUrl);
     
-    // 사용 가능한 트랜스포트 찾기
+    // Find available transport
     let transportNumber = '';
     if (transportInfo.TRANSPORTS && transportInfo.TRANSPORTS.length > 0) {
       transportNumber = transportInfo.TRANSPORTS[0].TRKORR;
-      console.log(`사용 가능한 트랜스포트: ${transportNumber} (${transportInfo.TRANSPORTS[0].AS4TEXT})`);
+      console.log(`Available transport: ${transportNumber} (${transportInfo.TRANSPORTS[0].AS4TEXT})`);
     } else {
-      console.log('사용 가능한 트랜스포트가 없습니다. 필요한 경우 새 트랜스포트를 생성하세요.');
+      console.log('No available transport. Create a new transport if needed.');
       
-      // 새 트랜스포트 생성 (주석 처리됨 - 필요한 경우 주석 해제)
+      // Create new transport (commented out - uncomment if needed)
       /*
       transportNumber = await client.createTransport(
         objectUrl,
-        '소스 코드 수정',
+        'Source code modification',
         objectStructure.metaData['adtcore:packageName'] || 'ZEXAMPLE_PKG'
       );
-      console.log(`새 트랜스포트 생성됨: ${transportNumber}`);
+      console.log(`New transport created: ${transportNumber}`);
       */
     }
     
-    // 5. 객체 잠금
-    console.log('객체 잠금 중...');
+    // 5. Lock object
+    console.log('Locking object...');
     const lock = await client.lock(objectUrl);
-    console.log(`잠금 핸들: ${lock.LOCK_HANDLE}`);
+    console.log(`Lock handle: ${lock.LOCK_HANDLE}`);
     
-    // 6. 소스 코드 수정
-    console.log('소스 코드 수정 중...');
+    // 6. Modify source code
+    console.log('Modifying source code...');
     
-    // 예: 소스 끝에 주석 추가
+    // Example: Add comment at the end of source
     const timestamp = new Date().toISOString();
     const modifiedSource = source + `\n\n* Modified by ADT API at ${timestamp}\n`;
     
-    // 7. 수정된 소스 코드 저장
-    console.log('수정된 소스 코드 저장 중...');
+    // 7. Save modified source code
+    console.log('Saving modified source code...');
     await client.setObjectSource(
       sourceUrl,
       modifiedSource,
       lock.LOCK_HANDLE,
-      transportNumber // 트랜스포트 번호 (선택적)
+      transportNumber // Transport number (optional)
     );
     
-    console.log('소스 코드가 저장되었습니다.');
+    console.log('Source code has been saved.');
     
-    // 8. 구문 검사
-    console.log('구문 검사 중...');
+    // 8. Syntax check
+    console.log('Performing syntax check...');
     const syntaxCheckResults = await client.syntaxCheck(
       objectUrl,
       sourceUrl,
@@ -378,62 +378,62 @@ async function manageSourceCode() {
     );
     
     if (syntaxCheckResults.length === 0) {
-      console.log('구문 오류가 없습니다.');
+      console.log('No syntax errors found.');
     } else {
-      console.log(`구문 오류 발견: ${syntaxCheckResults.length}개`);
+      console.log(`Syntax errors found: ${syntaxCheckResults.length}`);
       syntaxCheckResults.forEach(result => {
         console.log(`- ${result.line}:${result.offset} - ${result.severity}: ${result.text}`);
       });
     }
     
-    // 9. 활성화 (구문 오류가 없는 경우)
+    // 9. Activate (if no syntax errors)
     if (syntaxCheckResults.length === 0) {
-      console.log('객체 활성화 중...');
+      console.log('Activating object...');
       const activationResult = await client.activate(
         objectStructure.metaData['adtcore:name'],
         objectUrl
       );
       
       if (activationResult.success) {
-        console.log('객체가 성공적으로 활성화되었습니다.');
+        console.log('Object successfully activated.');
       } else {
-        console.log('활성화 실패:');
+        console.log('Activation failed:');
         activationResult.messages.forEach(msg => {
           console.log(`- ${msg.type}: ${msg.shortText}`);
         });
       }
     }
     
-    // 10. 객체 잠금 해제
-    console.log('객체 잠금 해제 중...');
+    // 10. Unlock object
+    console.log('Unlocking object...');
     await client.unLock(objectUrl, lock.LOCK_HANDLE);
-    console.log('객체 잠금이 해제되었습니다.');
+    console.log('Object has been unlocked.');
     
   } catch (error) {
-    console.error('오류 발생:', error);
+    console.error('Error occurred:', error);
   } finally {
-    // 상태 유지 세션 종료 및 로그아웃
+    // End stateful session and logout
     await client.logout();
-    console.log('로그아웃 완료');
+    console.log('Logout completed');
   }
 }
 
 manageSourceCode().catch(console.error);
 ```
 
-### 확장 방법
+### How to Extend
 
-- 여러 객체의 소스 코드를 일괄 수정하는 기능 추가
-- 소스 코드 백업 및 복원 메커니즘 구현
-- Pretty Printer를 사용하여 코드 포맷팅 추가
+- Add functionality to batch modify source code of multiple objects
+- Implement source code backup and restore mechanism
+- Add code formatting using Pretty Printer
 
-## 구문 검사 및 활성화
+## Syntax Check and Activation
 
-### 목적
+### Purpose
 
-ABAP 객체의 구문을 검사하고 활성화하는 방법을 보여줍니다.
+Shows how to check syntax and activate ABAP objects.
 
-### 코드
+### Code
 
 ```typescript
 // syntax-check-activate.ts
@@ -449,23 +449,23 @@ async function checkAndActivate() {
   try {
     await client.login();
     
-    // 검사할 객체 URL
+    // Object URL to check
     const objectUrl = '/sap/bc/adt/programs/programs/ZEXAMPLE_PROGRAM';
     
-    // 1. 객체 구조 조회
-    console.log(`객체 구조 조회 중: ${objectUrl}`);
+    // 1. Retrieve object structure
+    console.log(`Retrieving object structure: ${objectUrl}`);
     const objectStructure = await client.objectStructure(objectUrl);
     
-    // 2. 소스 코드 URL 조회
+    // 2. Get source code URL
     const sourceUrl = ADTClient.mainInclude(objectStructure);
     
-    // 3. 소스 코드 조회
-    console.log('소스 코드 조회 중...');
+    // 3. Retrieve source code
+    console.log('Retrieving source code...');
     const source = await client.getObjectSource(sourceUrl);
-    console.log(`소스 코드 길이: ${source.length} 자`);
+    console.log(`Source code length: ${source.length} characters`);
     
-    // 4. 구문 검사
-    console.log('구문 검사 중...');
+    // 4. Syntax check
+    console.log('Performing syntax check...');
     const syntaxResults = await client.syntaxCheck(
       objectUrl,
       sourceUrl,
@@ -473,62 +473,62 @@ async function checkAndActivate() {
     );
     
     if (syntaxResults.length === 0) {
-      console.log('구문 오류가 없습니다.');
+      console.log('No syntax errors found.');
     } else {
-      console.log(`구문 오류 발견: ${syntaxResults.length}개`);
+      console.log(`Syntax errors found: ${syntaxResults.length}`);
       
-      // 오류 및 경고 그룹화
+      // Group errors and warnings
       const errors = syntaxResults.filter(result => result.severity === 'E' || result.severity === 'A');
       const warnings = syntaxResults.filter(result => result.severity === 'W');
       
       if (errors.length > 0) {
-        console.log(`\n오류: ${errors.length}개`);
+        console.log(`\nErrors: ${errors.length}`);
         errors.forEach(error => {
-          console.log(`- 라인 ${error.line}, 열 ${error.offset}: ${error.text}`);
+          console.log(`- Line ${error.line}, Column ${error.offset}: ${error.text}`);
         });
       }
       
       if (warnings.length > 0) {
-        console.log(`\n경고: ${warnings.length}개`);
+        console.log(`\nWarnings: ${warnings.length}`);
         warnings.forEach(warning => {
-          console.log(`- 라인 ${warning.line}, 열 ${warning.offset}: ${warning.text}`);
+          console.log(`- Line ${warning.line}, Column ${warning.offset}: ${warning.text}`);
         });
       }
     }
     
-    // 5. 비활성 객체 목록 조회
-    console.log('\n비활성 객체 조회 중...');
+    // 5. Get list of inactive objects
+    console.log('\nRetrieving inactive objects...');
     const inactiveObjects = await client.inactiveObjects();
     
-    console.log(`비활성 객체 수: ${inactiveObjects.length}`);
+    console.log(`Number of inactive objects: ${inactiveObjects.length}`);
     inactiveObjects.forEach(record => {
       if (record.object) {
         console.log(`- ${record.object["adtcore:type"]}: ${record.object["adtcore:name"]}`);
       }
     });
     
-    // 6. 활성화 수행
+    // 6. Perform activation
     const objName = objectStructure.metaData['adtcore:name'];
     
-    console.log(`\n'${objName}' 활성화 중...`);
+    console.log(`\nActivating '${objName}'...`);
     const activationResult = await client.activate(objName, objectUrl);
     
     if (activationResult.success) {
-      console.log('활성화 성공');
+      console.log('Activation successful');
     } else {
-      console.log('활성화 실패:');
+      console.log('Activation failed:');
       
-      // 메시지 출력
+      // Print messages
       if (activationResult.messages.length > 0) {
-        console.log('활성화 메시지:');
+        console.log('Activation messages:');
         activationResult.messages.forEach(msg => {
           console.log(`- ${msg.type}: ${msg.shortText}`);
         });
       }
       
-      // 여전히 비활성 상태인 객체 출력
+      // Print objects that are still inactive
       if (activationResult.inactive.length > 0) {
-        console.log('비활성 상태인 객체:');
+        console.log('Objects still inactive:');
         activationResult.inactive.forEach(record => {
           if (record.object) {
             console.log(`- ${record.object["adtcore:type"]}: ${record.object["adtcore:name"]}`);
@@ -538,29 +538,29 @@ async function checkAndActivate() {
     }
     
   } catch (error) {
-    console.error('오류 발생:', error);
+    console.error('Error occurred:', error);
   } finally {
     await client.logout();
-    console.log('로그아웃 완료');
+    console.log('Logout completed');
   }
 }
 
 checkAndActivate().catch(console.error);
 ```
 
-### 확장 방법
+### How to Extend
 
-- 여러 객체를 순차적으로 활성화하는 배치 프로세스 구현
-- 활성화 실패 시 자동 수정 로직 추가
-- 활성화 전후 객체 상태 비교 기능 구현
+- Implement batch process to activate multiple objects sequentially
+- Add auto-fix logic for activation failures
+- Implement object state comparison before and after activation
 
-## 코드 완성 활용
+## Using Code Completion
 
-### 목적
+### Purpose
 
-ABAP 코드 편집 시 코드 완성 및 요소 정보를 활용하는 방법을 보여줍니다.
+Shows how to use code completion and element information when editing ABAP code.
 
-### 코드
+### Code
 
 ```typescript
 // code-completion.ts
@@ -576,24 +576,24 @@ async function useCodeCompletion() {
   try {
     await client.login();
     
-    // 1. 객체 구조 조회
+    // 1. Retrieve object structure
     const objectUrl = '/sap/bc/adt/programs/programs/ZEXAMPLE_PROGRAM';
-    console.log(`객체 구조 조회 중: ${objectUrl}`);
+    console.log(`Retrieving object structure: ${objectUrl}`);
     const objectStructure = await client.objectStructure(objectUrl);
     
-    // 2. 소스 코드 URL 조회
+    // 2. Get source code URL
     const sourceUrl = ADTClient.mainInclude(objectStructure);
     
-    // 3. 소스 코드 조회
-    console.log('소스 코드 조회 중...');
+    // 3. Retrieve source code
+    console.log('Retrieving source code...');
     const source = await client.getObjectSource(sourceUrl);
     
-    // 소스 코드 내에서 특정 위치 선택 (예: 10번 줄, 5번 열)
+    // Select specific position in source code (e.g. line 10, column 5)
     const line = 10;
     const column = 5;
     
-    // 4. 코드 완성 제안 가져오기
-    console.log(`위치 (${line}, ${column})에서 코드 완성 제안 조회 중...`);
+    // 4. Get code completion proposals
+    console.log(`Retrieving code completion proposals at position (${line}, ${column})...`);
     const completions = await client.codeCompletion(
       sourceUrl,
       source,
@@ -601,16 +601,16 @@ async function useCodeCompletion() {
       column
     );
     
-    console.log(`완성 제안 수: ${completions.length}`);
-    console.log('상위 10개 제안:');
+    console.log(`Number of completion proposals: ${completions.length}`);
+    console.log('Top 10 proposals:');
     completions.slice(0, 10).forEach(completion => {
-      console.log(`- ${completion.IDENTIFIER} (유형: ${completion.KIND})`);
+      console.log(`- ${completion.IDENTIFIER} (Type: ${completion.KIND})`);
     });
     
-    // 5. 첫 번째 제안에 대한 상세 정보 조회
+    // 5. Get detailed information for first proposal
     if (completions.length > 0) {
       const firstCompletion = completions[0];
-      console.log(`\n'${firstCompletion.IDENTIFIER}'에 대한 상세 정보 조회 중...`);
+      console.log(`\nRetrieving detailed information for '${firstCompletion.IDENTIFIER}'...`);
       
       const elementInfo = await client.codeCompletionElement(
         sourceUrl,
@@ -620,29 +620,29 @@ async function useCodeCompletion() {
       );
       
       if (typeof elementInfo !== 'string') {
-        console.log('요소 정보:');
-        console.log(`- 이름: ${elementInfo.name}`);
-        console.log(`- 유형: ${elementInfo.type}`);
-        console.log(`- 문서: ${elementInfo.doc}`);
+        console.log('Element information:');
+        console.log(`- Name: ${elementInfo.name}`);
+        console.log(`- Type: ${elementInfo.type}`);
+        console.log(`- Documentation: ${elementInfo.doc}`);
         
-        // 구성요소 출력
+        // Print components
         if (elementInfo.components && elementInfo.components.length > 0) {
-          console.log('\n구성요소:');
+          console.log('\nComponents:');
           elementInfo.components.forEach(component => {
             console.log(`- ${component['adtcore:type']}: ${component['adtcore:name']}`);
           });
         }
       } else {
-        console.log(`요소 정보: ${elementInfo}`);
+        console.log(`Element information: ${elementInfo}`);
       }
     }
     
-    // 6. 정의 찾기
-    console.log('\n정의 찾기 중...');
-    // 예를 들어 METHOD 키워드의 정의를 찾습니다
-    const definitionLine = 15;  // 예시 라인 번호
-    const startColumn = 2;     // 예시 시작 열
-    const endColumn = 8;       // 예시 끝 열
+    // 6. Find definition
+    console.log('\nFinding definition...');
+    // For example, find the definition of the METHOD keyword
+    const definitionLine = 15;  // Example line number
+    const startColumn = 2;     // Example start column
+    const endColumn = 8;       // Example end column
     
     try {
       const definition = await client.findDefinition(
@@ -651,19 +651,19 @@ async function useCodeCompletion() {
         definitionLine,
         startColumn,
         endColumn,
-        false  // 정의 찾기(구현 아님)
+        false  // Find definition (not implementation)
       );
       
-      console.log('정의 위치:');
+      console.log('Definition location:');
       console.log(`- URL: ${definition.url}`);
-      console.log(`- 라인: ${definition.line}`);
-      console.log(`- 열: ${definition.column}`);
+      console.log(`- Line: ${definition.line}`);
+      console.log(`- Column: ${definition.column}`);
     } catch (e) {
-      console.log('정의를 찾을 수 없습니다.');
+      console.log('Definition not found.');
     }
     
-    // 7. 사용처 찾기
-    console.log('\n사용처 찾기 중...');
+    // 7. Find usages
+    console.log('\nFinding usages...');
     try {
       const usages = await client.usageReferences(
         objectUrl,
@@ -671,19 +671,19 @@ async function useCodeCompletion() {
         startColumn
       );
       
-      console.log(`사용처 수: ${usages.length}`);
+      console.log(`Number of usages: ${usages.length}`);
       
       if (usages.length > 0) {
-        console.log('상위 5개 사용처:');
+        console.log('Top 5 usages:');
         usages.slice(0, 5).forEach(usage => {
           console.log(`- ${usage['adtcore:type']}: ${usage['adtcore:name']}`);
         });
         
-        // 첫 번째 사용처에 대한 코드 조각 가져오기
+        // Get code snippet for first usage
         const snippets = await client.usageReferenceSnippets(usages.slice(0, 1));
         
         if (snippets.length > 0 && snippets[0].snippets.length > 0) {
-          console.log('\n사용처 코드 조각:');
+          console.log('\nUsage code snippets:');
           snippets[0].snippets.forEach(snippet => {
             console.log(`- ${snippet.description}:`);
             console.log(`  ${snippet.content}`);
@@ -691,33 +691,33 @@ async function useCodeCompletion() {
         }
       }
     } catch (e) {
-      console.log('사용처를 찾을 수 없습니다.');
+      console.log('Usages not found.');
     }
     
   } catch (error) {
-    console.error('오류 발생:', error);
+    console.error('Error occurred:', error);
   } finally {
     await client.logout();
-    console.log('로그아웃 완료');
+    console.log('Logout completed');
   }
 }
 
 useCodeCompletion().catch(console.error);
 ```
 
-### 확장 방법
+### How to Extend
 
-- 코드 자동 완성 기능이 있는 편집기 통합
-- 자주 사용하는 코드 스니펫 관리 기능 추가
-- 심볼 정보 캐싱 메커니즘 구현
+- Integrate with an editor featuring code auto-completion
+- Add management of frequently used code snippets
+- Implement symbol information caching mechanism
 
-## 객체 생성
+## Object Creation
 
-### 목적
+### Purpose
 
-다양한 유형의 ABAP 객체를 생성하는 방법을 보여줍니다.
+Shows how to create various types of ABAP objects.
 
-### 코드
+### Code
 
 ```typescript
 // create-objects.ts
@@ -733,200 +733,200 @@ async function createObjects() {
   try {
     await client.login();
     
-    // 상태 유지 세션으로 설정
+    // Set stateful session
     client.stateful = "stateful";
     
-    // 1. 트랜스포트 정보 조회 (객체 생성에 필요)
+    // 1. Get transport information (needed for object creation)
     const packageName = 'ZEXAMPLE_PKG';
-    console.log(`패키지 '${packageName}'의 트랜스포트 정보 조회 중...`);
+    console.log(`Retrieving transport information for package '${packageName}'...`);
     
     const transportInfo = await client.transportInfo(
       `/sap/bc/adt/packages/${packageName}`,
       packageName
     );
     
-    // 사용 가능한 트랜스포트 찾기
+    // Find available transport
     let transportNumber = '';
     if (transportInfo.TRANSPORTS && transportInfo.TRANSPORTS.length > 0) {
       transportNumber = transportInfo.TRANSPORTS[0].TRKORR;
-      console.log(`사용 가능한 트랜스포트: ${transportNumber} (${transportInfo.TRANSPORTS[0].AS4TEXT})`);
+      console.log(`Available transport: ${transportNumber} (${transportInfo.TRANSPORTS[0].AS4TEXT})`);
     } else {
-      console.log('사용 가능한 트랜스포트가 없습니다. 새 트랜스포트 생성 중...');
+      console.log('No available transport. Creating new transport...');
       
       transportNumber = await client.createTransport(
         `/sap/bc/adt/packages/${packageName}`,
-        '객체 생성 예제',
+        'Object creation example',
         packageName
       );
       
-      console.log(`새 트랜스포트 생성됨: ${transportNumber}`);
+      console.log(`New transport created: ${transportNumber}`);
     }
     
-    // 2. 사용 가능한 객체 유형 로드
-    console.log('\n사용 가능한 객체 유형 로드 중...');
+    // 2. Load available object types
+    console.log('\nLoading available object types...');
     const objectTypes = await client.loadTypes();
     
-    // 생성 가능한 유형 출력
-    console.log('생성 가능한 주요 객체 유형:');
+    // Print creatable types
+    console.log('Major creatable object types:');
     const creatableTypes = objectTypes.filter(t => 
       t.CAPABILITIES.includes('create') && t.OBJNAME_MAXLENGTH > 0
     );
     
     creatableTypes.slice(0, 10).forEach(type => {
-      console.log(`- ${type.OBJECT_TYPE}: ${type.OBJECT_TYPE_LABEL} (최대 길이: ${type.OBJNAME_MAXLENGTH})`);
+      console.log(`- ${type.OBJECT_TYPE}: ${type.OBJECT_TYPE_LABEL} (Max length: ${type.OBJNAME_MAXLENGTH})`);
     });
     
-    // 3. 프로그램 생성
+    // 3. Create program
     const programName = 'ZEXAMPLE_NEW_PROG';
-    console.log(`\n새 프로그램 '${programName}' 생성 중...`);
+    console.log(`\nCreating new program '${programName}'...`);
     
-    // 객체 이름 유효성 검사
+    // Validate object name
     try {
       const validationResult = await client.validateNewObject({
         objtype: 'PROG/P',
         objname: programName,
-        description: '예제 프로그램',
+        description: 'Example Program',
         packagename: packageName
       });
       
-      console.log(`유효성 검사 결과: ${validationResult.success ? '성공' : '실패'}`);
+      console.log(`Validation result: ${validationResult.success ? 'Success' : 'Failure'}`);
       if (!validationResult.success) {
-        console.log(`오류: ${validationResult.SHORT_TEXT}`);
+        console.log(`Error: ${validationResult.SHORT_TEXT}`);
         return;
       }
     } catch (error) {
-      console.error('유효성 검사 중 오류 발생:', error);
+      console.error('Error during validation:', error);
       return;
     }
     
-    // 프로그램 생성
+    // Create program
     try {
       await client.createObject({
         objtype: 'PROG/P',
         name: programName,
-        description: '예제 프로그램',
+        description: 'Example Program',
         parentName: packageName,
         parentPath: `/sap/bc/adt/packages/${packageName}`,
         responsible: client.username,
         transport: transportNumber
       });
       
-      console.log(`프로그램 '${programName}'이 성공적으로 생성되었습니다.`);
+      console.log(`Program '${programName}' successfully created.`);
     } catch (error) {
-      console.error('프로그램 생성 중 오류 발생:', error);
+      console.error('Error creating program:', error);
       return;
     }
     
-    // 4. 생성된 프로그램 소스 코드 수정
-    console.log('\n생성된 프로그램 소스 코드 수정 중...');
+    // 4. Modify source code of created program
+    console.log('\nModifying source code of created program...');
     const programUrl = `/sap/bc/adt/programs/programs/${programName}`;
     
-    // 객체 구조 조회
+    // Retrieve object structure
     const objectStructure = await client.objectStructure(programUrl);
     const sourceUrl = ADTClient.mainInclude(objectStructure);
     
-    // 현재 소스 코드 조회
+    // Get current source code
     const currentSource = await client.getObjectSource(sourceUrl);
-    console.log('현재 소스 코드:');
+    console.log('Current source code:');
     console.log(currentSource);
     
-    // 객체 잠금
+    // Lock object
     const lock = await client.lock(programUrl);
     
-    // 소스 코드 수정
+    // Modify source code
     const newSource = `REPORT ${programName}.
     
-* 이 프로그램은 ABAP ADT API를 사용하여 생성되었습니다
-* 생성 날짜: ${new Date().toISOString()}
+* This program was created using the ABAP ADT API
+* Creation date: ${new Date().toISOString()}
 
 PARAMETERS: p_input TYPE string.
 
 START-OF-SELECTION.
   WRITE: / 'Hello, World!'.
-  WRITE: / '입력값:', p_input.
+  WRITE: / 'Input:', p_input.
 `;
     
-    // 소스 코드 저장
+    // Save source code
     await client.setObjectSource(sourceUrl, newSource, lock.LOCK_HANDLE, transportNumber);
-    console.log('소스 코드가 수정되었습니다.');
+    console.log('Source code has been modified.');
     
-    // 활성화
+    // Activate
     const activationResult = await client.activate(programName, programUrl);
     
     if (activationResult.success) {
-      console.log('프로그램이 성공적으로 활성화되었습니다.');
+      console.log('Program successfully activated.');
     } else {
-      console.log('프로그램 활성화 실패:');
+      console.log('Program activation failed:');
       activationResult.messages.forEach(msg => {
         console.log(`- ${msg.type}: ${msg.shortText}`);
       });
     }
     
-    // 객체 잠금 해제
+    // Unlock object
     await client.unLock(programUrl, lock.LOCK_HANDLE);
     
-    // 5. 클래스 생성 (추가 예제)
+    // 5. Create class (additional example)
     const className = 'ZCL_EXAMPLE_NEW_CLASS';
-    console.log(`\n새 클래스 '${className}' 생성 중...`);
+    console.log(`\nCreating new class '${className}'...`);
     
     try {
-      // 클래스 유효성 검사
+      // Validate class
       await client.validateNewObject({
         objtype: 'CLAS/OC',
         objname: className,
-        description: '예제 클래스',
+        description: 'Example Class',
         packagename: packageName
       });
       
-      // 클래스 생성
+      // Create class
       await client.createObject({
         objtype: 'CLAS/OC',
         name: className,
-        description: '예제 클래스',
+        description: 'Example Class',
         parentName: packageName,
         parentPath: `/sap/bc/adt/packages/${packageName}`,
         responsible: client.username,
         transport: transportNumber
       });
       
-      console.log(`클래스 '${className}'이 성공적으로 생성되었습니다.`);
+      console.log(`Class '${className}' successfully created.`);
       
-      // 테스트 클래스 포함 생성
-      console.log('테스트 클래스 포함 생성 중...');
+      // Create test class include
+      console.log('Creating test class include...');
       const classUrl = `/sap/bc/adt/oo/classes/${className}`;
       const classLock = await client.lock(classUrl);
       
       await client.createTestInclude(className, classLock.LOCK_HANDLE, transportNumber);
-      console.log('테스트 클래스 포함이 성공적으로 생성되었습니다.');
+      console.log('Test class include successfully created.');
       
-      // 클래스 잠금 해제
+      // Unlock class
       await client.unLock(classUrl, classLock.LOCK_HANDLE);
       
     } catch (error) {
-      console.error('클래스 생성 중 오류 발생:', error);
+      console.error('Error creating class:', error);
     }
     
   } catch (error) {
-    console.error('오류 발생:', error);
+    console.error('Error occurred:', error);
   } finally {
     await client.logout();
-    console.log('로그아웃 완료');
+    console.log('Logout completed');
   }
 }
 
 createObjects().catch(console.error);
 ```
 
-### 확장 방법
+### How to Extend
 
-- 템플릿 기반 객체 생성 메커니즘 구현
-- 객체 생성 마법사 UI 개발
-- 여러 관련 객체를 함께 생성하는 기능 추가
+- Implement template-based object creation mechanism
+- Develop object creation wizard UI
+- Add functionality to create multiple related objects together
 
-## 기타 기본 예제
+## Other Basic Examples
 
-이 페이지에서는 ABAP ADT API 라이브러리의 가장 일반적인 사용 사례에 대한 기본 예제를 제공했습니다. 더 복잡한 시나리오와 고급 기능에 대한 예제는 [고급 예제](./advanced.md) 페이지를 참조하세요.
+This page has provided basic examples for the most common use cases of the ABAP ADT API library. For more complex scenarios and advanced features, refer to the [Advanced Examples](./advanced.md) page.
 
-각 예제는 개별적으로 실행할 수 있으며, 자신의 필요에 맞게 수정할 수 있습니다. 또한 여러 예제의 기능을 결합하여 더 복잡한 작업을 수행하는 스크립트를 만들 수도 있습니다.
+Each example can be executed individually and can be modified to fit your needs. You can also combine functionalities from multiple examples to create scripts that perform more complex tasks.
 
-ABAP ADT API에 대한 자세한 내용은 [API 문서](/api/) 섹션을 참조하세요.
+For more details on the ABAP ADT API, refer to the [API Documentation](/api/) section.
