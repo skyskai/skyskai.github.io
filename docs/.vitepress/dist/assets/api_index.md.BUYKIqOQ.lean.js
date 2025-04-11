@@ -1,0 +1,1 @@
+import{_ as s,c as t,o as a,ag as e}from"./chunks/framework.DPDPlp3K.js";const c=JSON.parse('{"title":"API 문서 개요","description":"","frontmatter":{},"headers":[],"relativePath":"api/index.md","filePath":"api/index.md"}'),l={name:"api/index.md"};function n(h,i,p,r,d,o){return a(),t("div",null,i[0]||(i[0]=[e("",20)]))}const g=s(l,[["render",n]]);export{c as __pageData,g as default};

@@ -1,0 +1,1 @@
+import{_ as i,c as a,o as n,ag as h}from"./chunks/framework.DPDPlp3K.js";const d=JSON.parse('{"title":"ABAP Git 통합","description":"","frontmatter":{},"headers":[],"relativePath":"api/git.md","filePath":"api/git.md"}'),k={name:"api/git.md"};function l(p,s,t,E,e,r){return n(),a("div",null,s[0]||(s[0]=[h("",91)]))}const y=i(k,[["render",l]]);export{d as __pageData,y as default};

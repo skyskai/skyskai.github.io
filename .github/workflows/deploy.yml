@@ -1,0 +1,10 @@
+jobs:
+  # 빌드 작업
+  build:
+    runs-on: ubuntu-latest
+    steps:
+	  ...
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/.vitepress/dist
