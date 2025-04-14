@@ -13,7 +13,7 @@ hero:
       link: /api/
     - theme: alt
       text: GitHub
-      link: https://github.com/marcellourbani/abap-adt-api
+      link: https://github.com/skyskai/skyskai.github.io
 
 features:
   - icon: 🔄

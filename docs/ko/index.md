@@ -7,13 +7,13 @@ hero:
   actions:
     - theme: brand
       text: 시작하기
-      link: /getting-started
+      link: /ko/getting-started
     - theme: alt
       text: API 문서
-      link: /api/
+      link: /ko/api/
     - theme: alt
       text: GitHub
-      link: https://github.com/marcellourbani/abap-adt-api
+      link: https://github.com/skyskai/skyskai.github.io
 
 features:
   - icon: 🔄
@@ -72,4 +72,4 @@ async function main() {
 main().catch(console.error);
 ```
 
-자세한 내용은 [시작하기](/getting-started) 가이드를 참고하세요.
+자세한 내용은 [시작하기](/ko/getting-started) 가이드를 참고하세요.

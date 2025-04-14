@@ -108,25 +108,25 @@ export default {
       themeConfig: {
         siteTitle: 'ABAP ADT API',
         nav: [
-          { text: '홈', link: '/' },
-          { text: '시작하기', link: '/getting-started' },
-          { text: 'API 문서', link: '/api/' },
-          { text: '예제', link: '/examples/' },
+          { text: '홈', link: '/ko/' },
+          { text: '시작하기', link: '/ko/getting-started' },
+          { text: 'API 문서', link: '/ko/api/' },
+          { text: '예제', link: '/ko/examples/' },
         ],
         sidebar: {
           '/api/': [
             {
               text: 'API 문서',
               items: [
-                { text: '개요', link: '/api/' },
-                { text: '기본 기능', link: '/api/core' },
-                { text: '객체 관리', link: '/api/object-management' },
-                { text: '개발 기능', link: '/api/development' },
-                { text: '트랜스포트', link: '/api/transport' },
-                { text: 'ABAP Git', link: '/api/git' },
-                { text: '디버깅', link: '/api/debugging' },
-                { text: '테스트', link: '/api/testing' },
-                { text: '고급 기능', link: '/api/advanced' },
+                { text: '개요', link: '/ko/api/' },
+                { text: '기본 기능', link: '/ko/api/core' },
+                { text: '객체 관리', link: '/ko/api/object-management' },
+                { text: '개발 기능', link: '/ko/api/development' },
+                { text: '트랜스포트', link: '/ko/api/transport' },
+                { text: 'ABAP Git', link: '/ko/api/git' },
+                { text: '디버깅', link: '/ko/api/debugging' },
+                { text: '테스트', link: '/ko/api/testing' },
+                { text: '고급 기능', link: '/ko/api/advanced' },
               ]
             }
           ],
@@ -134,9 +134,9 @@ export default {
             {
               text: '예제',
               items: [
-                { text: '개요', link: '/examples/' },
-                { text: '기본 예제', link: '/examples/basic' },
-                { text: '고급 예제', link: '/examples/advanced' },
+                { text: '개요', link: '/ko/examples/' },
+                { text: '기본 예제', link: '/ko/examples/basic' },
+                { text: '고급 예제', link: '/ko/examples/advanced' },
               ]
             }
           ]
